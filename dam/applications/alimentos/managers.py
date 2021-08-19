@@ -10,7 +10,7 @@ class AlimentoManager(models.Manager):
         resultado= self.filter(
             Q(nombre__icontains=kword) | Q(marca__icontains=kword)
              
-        )
+        ).order_by('-nombre')
         return resultado
     
     def buscar_alimentos_creadopor(self,usuario):

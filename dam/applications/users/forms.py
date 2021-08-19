@@ -79,8 +79,32 @@ class LoginForm(forms.Form):
         password=self.cleaned_data['password']
 
         if not authenticate(username=username,password=password):
-            raise forms.ValidationError('Los datos de usuario no son corerctos')
+            raise forms.ValidationError('Los datos de usuario no son correctos')
         return cleaned_data
+    
+class VerificationForm(forms.Form):
+    cod_registro=forms.CharField(required=True)
+    
+    def __init__(self, pk, *args, **kwargs):
+        self.id_user = pk
+        super(VerificationForm, self).__init__(*args, **kwargs)
+
+
+
+    def clean_codregistro(self):
+        codigo=self.cleaned_data['cod_registro']
+
+        if len(codigo)==6:
+            #verificamos que el codigo y el id del usuario sean validos
+            activo=User.objects.cod_validar(
+                self.id_user,
+                codigo
+            )
+            if not activo:
+                raise forms.ValidationError('Codigo incorrecto')
+
+        else:
+            raise forms.ValidationError('Codigo incorrecto')
 
        
 

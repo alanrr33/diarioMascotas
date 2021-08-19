@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserRegisterView,LoginUser,LogoutView,HomePage
+from .views import UserRegisterView,LoginUser,LogoutView,HomePage,CodeVerificationView
 
 app_name='users_app'
 
@@ -8,5 +8,6 @@ urlpatterns = [
     path('login/',LoginUser.as_view(),name="loginuser"),      
     path('logout/',LogoutView.as_view(),name="logoutuser"), 
     path('panel/',HomePage.as_view(),name="paneluser"),
+    path('user-verificacion/<int:pk>/',CodeVerificationView.as_view(),name="userverificacion"),
 
 ]
