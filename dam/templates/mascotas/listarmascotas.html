@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}Lista mascotas{% endblock title %}
+{% block navbar_secundaria %}
+{% include 'includes/navbarmascotas.html' %}
+{% endblock navbar_secundaria %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages  %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} 
+      <br>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %} 
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} 
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+  {% endfor %}
+{% endif %}
+
+
+
+
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <p class="h4">Estas son tu mascotas {{ user.username }} </p>
+    </div>
+</div>
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+
+        {% for i in lista_mascotas  %}
+
+            <div class="col-auto mb-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ i.nombre }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ i.tipo }}</h6>
+                        <p class="card-text">
+                        <p>Edad: {{ i.edad }} meses</p>
+                        <p>Peso: {{ i.peso }} Kg </p>
+                        <p>Actividad: {{ i.actividad }}</p>
+                        <p>Meta: {{ i.meta }}</p>
+
+                        </p>
+                        <a href="{% url 'diario_urls:verdiario' i.id %}" class="btn btn-primary btn-sm" >Diarios</a>
+                        <a href="{% url 'mascotas_urls:panelmascota' i.id %}" class="btn btn-primary btn-sm">Panel</a>
+                        <a href="{% url 'mascotas_urls:reportes' i.id %}" class="btn btn-primary btn-sm">Reportes</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+        <p>No tenes mascotas, registra una</p>
+
+        {% endfor %}
+
+    
+    </div>
+
+    <div class="row justify-content-center">
+
+        {% if is_paginated %}
+            <nav aria-label="123">
+                <ul class="pagination pagination-sm">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Atras</a></li>
+                    {% endif %}
+
+                    {% for pagina in paginator.page_range  %}
+                    {% if pagina == page_obj.number %}
+
+                    <li class="page-item active"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+                    {% endif %}
+                    
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+    </div>
+    
+</div>
+
+{% endblock content %}

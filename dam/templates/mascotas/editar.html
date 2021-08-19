@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Editar mascota{% endblock title %}
+
+{% block navbar_secundaria %}
+{% include 'includes/navbarmascotas.html' %}
+{% endblock navbar_secundaria %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>Editar</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-secondary">Guardar</button>
+    </form>
+{% endblock content %}

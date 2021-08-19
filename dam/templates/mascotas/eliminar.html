@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar mascota{% endblock title %}
+
+{% block navbar_secundaria %}
+{% include 'includes/navbarmascotas.html' %}
+{% endblock navbar_secundaria %}
+
+{% block content %}
+
+    <h1>¿Estas seguro de eliminar esta mascota ?</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    </form>
+{% endblock content %}
+
+    

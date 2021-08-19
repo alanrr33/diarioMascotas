@@ -1,0 +1,42 @@
+{% load bootstrap_icons %}
+<nav class="navbar navbar-light navbar-expand-md justify-content-center" style="background-color: #70E000 ">
+    <ul class="nav navbar-nav mr-auto w-50 justify-content-start">
+        <li class="nav-item">
+            <a class="nav-link" href="#"><strong>INDEX</strong></a>
+        </li>
+    </ul>
+    <div class="navbar-collapse collapse w-100" id="collapsingNavbar3">
+
+        {% if user.is_authenticated %}
+            <ul class="navbar-nav w-100 justify-content-center">
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'mascotas_urls:listarmascotas' %}">Mascotas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'alimentos_urls:listaalimentos' %}">Alimentos</a>
+                </li>
+            </ul>
+        {% endif %}
+
+        <ul class="nav navbar-nav ml-auto w-100 justify-content-end">
+        
+        {% if not user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users_app:registraruser' %}">Registrarse</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users_app:loginuser' %}">Loguearse</a>
+            </li>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <span class="navbar-text">
+                Bienvenido {{ user.username }}
+            </span>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users_app:logoutuser' %}"> {% bs_icon 'door-closed' %} </a>
+            </li>
+        {% endif %}
+        </ul>
+    </div>
+</nav>

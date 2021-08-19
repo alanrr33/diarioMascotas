@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Lista alimentos{% endblock title %}
+{% block navbar_secundaria %}
+{% endblock navbar_secundaria %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-auto mb-3">
+        
+{% if messages %}
+  {% for message in messages  %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} 
+      <br>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} 
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+  {% endfor %}
+{% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-start">
+        <p class="h5">Estos son tus alimentos {{ user.username }} </p>
+    </div>
+</div>
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <br>
+        <table class="table table-borderless ">
+            <thead >
+                <tr class="table table-borderless ">
+                </tr>
+            </thead>
+            <tbody>
+            {% for i in alimentos  %}
+                <tr class="table table-bordered " style="background-color: #f6f6f6;">
+                
+                    <td style="width: 70%;">
+                        {{ i.nombre }},
+                        {{ i.marca }},
+                        {{ i.calorias }} Cal/Kilo  
+                    </td>
+
+                    <td style="width: 15%;"> 
+                        <a href="{% url 'alimentos_urls:editaralimento' i.id %}">
+                        <img src="{% static 'iconos/modificar.svg' %}" width="22" height="22" alt="icono-editar">
+                        </a>
+                    </td>
+
+                    <td style="width: 15%;">
+                        <a href="{% url 'alimentos_urls:eliminaralimento' i.id %}">
+                        <img src="{% static 'iconos/eliminar.svg' %}" width="22" height="22" alt="icono-eliminar">
+                        </a>
+                    </td>
+                    
+                </tr>
+                
+            {% empty %}
+            Todavia no cargaste ningun alimento
+            {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+</div>
+<a class="btn btn-success" href="{% url 'alimentos_urls:agregaralimento' %}">Agregar alimento</a>
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        {% if is_paginated %}
+            <nav aria-label="123">
+                <ul class="pagination pagination-sm">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Atras</a></li>
+                    {% endif %}
+
+                    {% for pagina in paginator.page_range  %}
+                    {% if pagina == page_obj.number %}
+
+                    <li class="page-item active"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+                    {% endif %}
+                    
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div> 
+
+</div>
+
+{% endblock content %}

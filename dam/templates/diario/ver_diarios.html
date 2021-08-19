@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block navbar_secundaria %}
+{% include 'includes/navbarmascotas.html' %}
+{% endblock navbar_secundaria %}
+{% block title %}Diarios{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-auto mb-3">
+        
+{% if messages %}
+  {% for message in messages  %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} 
+      <br>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      <br>
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} 
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+  {% endfor %}
+{% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-2">
+    <div class="row justify-content-center">
+        <div class="col-auto mb-4">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                </div>
+                <p>Fecha: <input type="date" name="selectorFecha" id="selectorFecha">
+                <button type="submit" class="btn-sm btn-primary" onsubmit="return validateMyForm(event);" >Ir</button>
+                </p>
+                
+            </form>
+        </div>
+    </div>
+</div>
+<!--
+<div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-auto mb-3">
+            <p class="h3">Seleccione una fecha</p>
+       </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-auto mb-2">
+            <ul class="list-group">
+            {% for i in lista_diario  %}
+                <li class="list-group-item">
+                <a href="{% url 'diario_urls:detallediario' i.id %}" class="text-decoration-none">
+                {% language 'es' %}
+                Diario del {{ i.fecha }}
+                {% endlanguage %}
+                </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+    {% if is_paginated %}
+        <nav aria-label="123">
+            <ul class="pagination pagination-sm">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Atras</a></li>
+                {% endif %}
+
+                {% for pagina in paginator.page_range  %}
+                {% if pagina == page_obj.number %}
+
+                <li class="page-item active"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+                {% endif %}
+                
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+                {% endif %}
+    {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+    
+-->
+
+
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+</script>
+
+
+{% endblock scripts %}

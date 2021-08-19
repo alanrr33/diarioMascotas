@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar alimento{% endblock title %}
+
+{% block navbar_secundaria %}
+    {% if not diario %}
+    {% include 'includes/navbarmascotas.html' %}
+    {% else %}
+    {% include 'includes/navbarbarmascdiarios.html' %}
+    {% endif %}
+{% endblock navbar_secundaria %}
+
+{% block content %}
+
+    <h1>¿Estas seguro de eliminar este alimento ?</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    </form>
+{% endblock content %}

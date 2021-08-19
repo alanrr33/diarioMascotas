@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block navbar_secundaria %}
+    {% if not diario %}
+    {% include 'includes/navbarmascotas.html' %}
+    {% else %}
+    {% include 'includes/navbarbarmascdiarios.html' %}
+    {% endif %}
+{% endblock navbar_secundaria %}
+
+{% block title %}Agregar alimento{% endblock title %}
+
+{% block content %}
+    <br>
+    {% language 'es' %}
+    <p class="h5">Agregar alimentos al diario del {{ diario.fecha }}</p>
+    {% endlanguage %}
+    <p>
+        <form method="GET" action="#">
+            <input type="text" placeholder="Ingrese nombre o marca" name="busqueda" id="busqueda">
+           <!-- {{ form.busqueda }}-->
+            <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
+        </form>
+    </p>
+
+
+
+
+<form method="POST" name="alimentosform">
+    {% csrf_token %}
+
+
+<table class="table table-borderless  ">
+  <thead >
+    <tr class="table table-borderless ">
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for alimento in alimentos %}
+    <tr class="table table-bordered" style="background-color: #f6f6f6;">
+      <td > 
+      
+      <input type="checkbox" class="checkbox-{{ forloop.counter }}" 
+      name="cb_alimento" id="cb_alimento-{{ forloop.counter }}" 
+      value="{{ alimento.id }}" /> 
+          
+        {{ alimento.nombre }}, 
+        {{ alimento.marca }},
+        Calorias por Kg: {{ alimento.calorias }}
+
+      </input>
+     
+      </td>
+      <td><input type="number" name="cantidad" id="cantidad" min="1" oninput="this.value = 
+          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+      </td>
+      <td>de <select name="medida" id="medida">
+            <option  selected value> -- Seleccione una opción -- </option>
+            <option value=1>1 Gramo</option>
+            <option value=100>100 Gramos</option>
+        </select>
+      </td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if is_paginated %}
+    <nav aria-label="123">
+        <ul class="pagination pagination-sm">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Atras</a></li>
+            {% endif %}
+
+            {% for pagina in paginator.page_range  %}
+            {% if pagina == page_obj.number %}
+
+            <li class="page-item active"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
+
+            {% endif %}
+            
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+
+<button class="btn border-0" style="background-color: #70E000;" type="submit" >Agregar seleccionado</button>
+
+</form>
+{% block scripts %}
+  <script type="text/javascript">
+
+  
+  </script>
+{% endblock scripts %}
+        
+{% endblock content %}

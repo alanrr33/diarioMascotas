@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block navbar_secundaria %}
+{% include 'includes/navbarmascotas.html' %}
+{% endblock navbar_secundaria %}
+
+{% load crispy_forms_tags %}
+{% block title %}Panel mascotas{% endblock title %}
+
+
+{% block content %}
+    <p class="h1">Panel de {{ mascota.nombre }}</p>
+    <br>
+    <div class="list-group">
+        <a href="{% url 'mascotas_urls:editar' pk=mascota.id %}" class="list-group-item list-group-item-action">Editar</a>
+        <a href="{% url 'mascotas_urls:delete' pk=mascota.id %}" class="list-group-item list-group-item-action">Borrar</a>
+        <a href="#" class="list-group-item list-group-item-action">3</a>
+    </div>
+
+{% endblock content %}

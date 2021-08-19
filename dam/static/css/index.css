@@ -1,0 +1,54 @@
+body.landing
+    {
+    width: 100%;
+    height: 100%;
+    background-image:url('/static/img/perrogato3.png');
+    background-size: cover;
+    background-attachment:fixed;
+    margin: 0;
+    padding: 0;
+    }
+
+/* ========== DEMO STYLES ========== */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
+}
+
+/* ===== Demo Styles ===== */
+.infobox{
+  font-family: 'Open Sans';
+  font-weight: 400;
+  font-size: 14px;
+  color: #323232;
+  width: 350px;
+  height: auto;
+  margin: 10% auto;
+  padding: 6px;
+  background-color: #c5c5c5;
+  border: 1px solid #f5f5f5;
+  border-radius: 20px;
+  -webkit-box-shadow:  0px 0px 10px 0px #f5f5f5;
+  box-shadow:  0px 0px 10px 0px #f5f5f5;
+  opacity: 0.8;
+}
+
+
+button {
+	position: relative;
+	appearance: none;
+	background: rgba(0, 0, 0, .2);
+	padding: .8em;
+	width: 100%;
+	border: none;
+	cursor: pointer;
+	outline: none;
+	color: rgba(255, 255, 255, .9);
+	font: inherit;
+	border-radius: 4px;
+	transition: opacity .3s ease;
+	
+
+}
