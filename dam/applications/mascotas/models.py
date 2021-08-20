@@ -45,7 +45,7 @@ class Mascota(models.Model):
     dueño=models.ForeignKey(User,on_delete=models.CASCADE)
     nombre=models.CharField(max_length=30,blank=False)
     tipo=models.CharField(max_length=5,choices=TIPO_CHOICES,blank=False)
-    peso=models.DecimalField(max_digits=4,decimal_places=2)
+    peso=models.DecimalField(max_digits=4,decimal_places=2,help_text="Peso en Kg")
     #edad en meses
     edad=models.PositiveIntegerField(default=12,help_text="Edad en meses")
     actividad=models.CharField(max_length=10,choices=ACTIVIDAD_CHOICES,default="Poca",blank=False)

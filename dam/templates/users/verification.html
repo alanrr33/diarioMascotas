@@ -1,3 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Confirmación{% endblock title %}
+
+    {% block content %}
+
+    <div class="container-fluid">
+        <p class="h4">Confirmación codigo<p>
+            <div class="row justify-content-start"> 
+                <div class="col-auto" style="width:35%">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary">Confirmar</button>
+                    </form>
+                </div>
+            </div>
+    </div>
+    
+    {% endblock content %}
+
+<!--
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,3 +39,4 @@
     
 </body>
 </html>
+-->

@@ -24,9 +24,15 @@ class UserManager(BaseUserManager, models.Manager):
         return self._create_user(username, email, password, False, False,False, **extra_fields)
     
     def cod_validar(self,id_usuario,cod_registro):
-        if self.filter(id=id_usuario,codregistro=cod_registro).exists():
+        if self.filter(id=id_usuario,cod_registro=cod_registro).exists():
             return True
         else:
             return False
+    
+    def email_unico(self,email):
+        if self.filter(email=email).exists():
+            return False
+        else:
+            return True
     
     

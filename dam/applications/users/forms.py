@@ -33,6 +33,13 @@ class UserRegisterForm(forms.ModelForm):
 
         password1=self.cleaned_data['password1']
         password2=self.cleaned_data['password2']
+        email=self.cleaned_data['email']
+        
+        email_valido=User.objects.email_unico(email)
+
+        if email_valido==False:
+            self.add_error('email',"El email ya se encuentra en uso")
+
         
         if password1 and password2:
             if password1 != password2:
@@ -91,19 +98,21 @@ class VerificationForm(forms.Form):
 
 
 
-    def clean_codregistro(self):
+    def clean_cod_registro(self):
         codigo=self.cleaned_data['cod_registro']
 
-        if len(codigo)==6:
+        if len(codigo) == 6:
             #verificamos que el codigo y el id del usuario sean validos
             activo=User.objects.cod_validar(
                 self.id_user,
                 codigo
             )
             if not activo:
+                print('codigo incorrecto %s' % codigo)
                 raise forms.ValidationError('Codigo incorrecto')
 
         else:
+            print('codigo incorrecto %s' % codigo)
             raise forms.ValidationError('Codigo incorrecto')
 
        

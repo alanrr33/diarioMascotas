@@ -33,3 +33,5 @@ class MascotaManager(models.Manager):
         )
         print(resultado)
         return resultado
+
+    

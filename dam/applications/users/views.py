@@ -1,4 +1,5 @@
-from django.forms.forms import Form
+#from django.forms.forms import Form
+from django.contrib import messages
 from django.views.generic import View,TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -42,7 +43,7 @@ class UserRegisterView(FormView):
         )
         #enviar codigo al mail del usuario
         asunto='Confirmación de email'
-        mensaje='Codigo de verificación' + codigo
+        mensaje='Codigo de verificación' + ' ' + codigo
         email_remitente='alanrr33@gmail.com'
         #
         send_mail(asunto,mensaje,email_remitente,[form.cleaned_data['email'],])
@@ -90,9 +91,12 @@ class CodeVerificationView(FormView):
 
         User.objects.filter(
            id=self.kwargs['pk']
-       ).update(
+        ).update(
            is_active=True
-       )
+        )
+
+        messages.success(self.request, 'Verificación exitosa !')
+
 
         return super(CodeVerificationView, self).form_valid(form)
 
