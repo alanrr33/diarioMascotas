@@ -66,6 +66,22 @@ class Mascota(models.Model):
     def imprimir(self):
         print ('jajajajsdxd')
 
+class PesoMascotaDiario(models.Model):
+
+    class Meta:
+        ordering=['id','fecha']
+        unique_together=['mascota','fecha']
+
+    mascota=models.ForeignKey(Mascota,on_delete=models.CASCADE)
+    peso=models.DecimalField(max_digits=4,decimal_places=2,help_text="Peso en Kg")
+    fecha=models.DateField(auto_now_add=False)
+    
+
+    def __str__(self):
+        return str(self.id)+' '+self.mascota.nombre
+    
+
+
 def calc_meta(sender,instance,**kwargs):
 
     if instance.tipo=="Gato":

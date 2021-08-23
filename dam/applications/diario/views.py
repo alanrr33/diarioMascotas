@@ -13,7 +13,7 @@ from .models import Diario
 from .forms import EditarAlimentoForm,CompletarDiarioForm
 
 from applications.alimentos.models import AlimentoConsumido
-from applications.mascotas.models import Mascota
+from applications.mascotas.models import Mascota,PesoMascotaDiario
 
 # Create your views here.
 
@@ -283,12 +283,37 @@ class DetalleDiario(LoginRequiredMixin,FormView,TemplateView):
 
     def form_valid(self, form):
         print("##FORM VALID##")
+        diario = Diario.objects.get(pk=self.kwargs.get('pk'))
+        mascota=Mascota.objects.get(pk=diario.mascota.id)
         completar=self.request.POST.get('completar','')
         dif_cal=self.request.POST.get('difcal','')
         diario_obj=Diario.objects.get(pk=self.kwargs['pk'])
+        peso_dia=self.request.POST.get('peso','')
+        
 
         if completar=="completar":
             print('completar diario')
+
+            obj, created=PesoMascotaDiario.objects.update_or_create(
+            mascota=mascota,
+            fecha=diario.fecha,
+            
+            defaults={
+                'mascota':mascota,
+                'fecha':diario.fecha,
+                'peso':peso_dia,
+            }
+            )
+
+            if created:
+                messages.success(self.request, 'Creada entrada de peso para la mascota')          
+            else:
+                #si estaba creado se actualiza
+                messages.success(self.request, 'Peso actualizado con exito a %s kg ' % obj.peso)    
+
+
+
+
             diario_obj.completado=True
             diario_obj.dif_cal=dif_cal
             diario_obj.save()

@@ -87,7 +87,7 @@
     {% for i in comidas  %}
     <tr class="table" style="background-color: #D8DFEE ">
 
-      <td align="center">{{ i.alimento.marca }}, {{ i.alimento.nombre }}, {% widthratio i.cantidad 1 i.porcion %}  gramos<td>
+      <td align="center">{{ i.alimento.marca }}, {{ i.alimento.nombre }}, {% widthratio i.cantidad 1 i.porcion %}  gramos</td>
 
 
 
@@ -142,26 +142,38 @@
 </div>
 
 <br>
-
+<form method="post">
 <div class="container-fluid">
-  <div class="row justify-content-center"> 
-    <div class="col-auto">
-      <form method="post">
-        {% csrf_token %}
 
+  <div class="row justify-content-center"> 
+    
+    <div class="col-auto">
+      
+        {% csrf_token %}
+        
         {% if diario.completado %}
           <button class="btn-sm btn-success" type="submit">Modificar diario</button>
           <input type="hidden" name="completar" id="completar" value="modificar">
         {% else %}
-          <button class="btn-sm btn-success" type="submit">Completar diario</button>
+          <div class="row justify-content-center">
+          
+          <!-- paso fecha y peso del día para llevar un registro -->
+          <label for="peso">Peso:&nbsp;</label>
+          <input type="number" name="peso" id="peso" min="0" value="0" step=".01">
+          <!--<input type="hidden" name="fecha" id="fecha" value=" {{ diario.fecha }} ">-->
+          </div>
+          <button class="btn-sm btn-success mt-3 ml-5" type="submit">Completar diario</button>
           <input type="hidden" name="completar" id="completar" value="completar">
           <input type="hidden" name="difcal" id="difcal" value="1">
+          
+          
         {% endif %}
 
-      </form>
+      
     </div>
   </div>
 </div>
+</form>
 
 
 
