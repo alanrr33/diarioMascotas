@@ -15,7 +15,7 @@ from django.urls import reverse_lazy
 
 from applications.diario.models import Diario
 from .forms import MascotaRegisterForm,MascotaUpdateForm
-from .models import Mascota
+from .models import Mascota,PesoMascotaDiario
 
 # Create your views here.
 
@@ -159,39 +159,69 @@ class ReportesMascotaView(LoginRequiredMixin,TemplateView):
         context = super().get_context_data(**kwargs)
 
         mascota=Mascota.objects.get(pk=self.kwargs['pk'])
+        context['mascota'] =mascota
+
         dias=7
+        tipografico=self.request.GET.get('selectTipo')
+        print(tipografico)
+
         if (self.request.GET.get('selectDias') != None):
             dias=float(self.request.GET.get('selectDias'))
             
 
-
-        if dias != None:
-            diarios=Diario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=dias))
-            if diarios:
-                diccionario={"Calorias":[],"Dia":[]}
-                for diario in diarios:
-                    diccionario['Calorias'].append(diario.total_cal)
-                    diccionario['Dia'].append(diario.fecha)
-                print(len(diccionario))
-                
-                f=pd.DataFrame(diccionario)
-                fig = px.bar(f, x='Dia', y='Calorias',range_x=[datetime.now()-timedelta(days=dias),datetime.now()])
-                fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True,tickangle=35,fixedrange=True)
-                fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True,fixedrange=True)
-
-             
-                fig.add_hline(y=mascota.meta,
-                annotation_text="Meta diaria", 
-                annotation_position="top right",
-                annotation_font_size=10,
-                annotation_font_color="orange"
-                )
+        if tipografico=="calorias":
+            if dias != None:
+                diarios=Diario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=dias))
+                if diarios:
+                    diccionario={"Calorias":[],"Dia":[]}
+                    for diario in diarios:
+                        diccionario['Calorias'].append(diario.total_cal)
+                        diccionario['Dia'].append(diario.fecha)
+                    #print(len(diccionario))
                     
+                    f=pd.DataFrame(diccionario)
+                    fig = px.bar(f, x='Dia', y='Calorias',range_x=[datetime.now()-timedelta(days=dias),datetime.now()])
+                    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True,tickangle=35,fixedrange=True)
+                    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True,fixedrange=True)
+                
+                    fig.add_hline(y=mascota.meta,
+                    annotation_text="Meta diaria", 
+                    annotation_position="top right",
+                    annotation_font_size=10,
+                    annotation_font_color="orange"
+                    )
+
+                    graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': False,})
+                    context["graph_div"]=graph_div
+        else:
+            if tipografico=="peso":
+                if dias != None:
+                    print ('tipo de grafico: %s' %tipografico)
+                    pesos=PesoMascotaDiario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=dias)).order_by('-fecha')
+                    if pesos:
+                        print ('pesos: %s' %pesos[0].peso)
+                        dic_peso={"Peso":[], "Dia":[]}
+
+                        for i in pesos:
+                            dic_peso['Peso'].append(i.peso)
+                            dic_peso['Dia'].append(i.fecha)
+                        
+                        #print ('diccionario de pesos: %s' %dic_peso)
+
+                        df=pd.DataFrame(dic_peso)
+                        print ('dataframe: %s' %df)
+
+                        fig = go.Figure()
+                        fig.add_trace(go.Scatter(x=df['Dia'], y=df['Peso'],
+                        mode='lines+markers',
+                        name='lines+markers'))
 
 
-            
-                graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': False,})
-                context["graph_div"]=graph_div
+                        graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': False,})
+                        context["graph_div"]=graph_div
+                        
+
+
 
         return context
 
