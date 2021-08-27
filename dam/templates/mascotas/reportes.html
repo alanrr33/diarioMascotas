@@ -7,6 +7,56 @@
 
 {% block content %}
 
+
+{% if messages %}
+  {% for message in messages  %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} 
+      <br>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %} 
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} 
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+  {% endfor %}
+{% endif %}
+
+
 <div class="container-fluid mt-4">
     <div class="row justify-content-start">
         <div class="col-auto mb-3">
@@ -19,9 +69,6 @@
                     <select class="form-control" name="selectTipo" id="selectTipo">
                     <option value="calorias">Calorias</option>
                     <option value="peso">Peso</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
                     </select>
                 </div>
 
@@ -38,17 +85,56 @@
 
                 <input class="btn btn-success" type="submit" value="Generar">
 
+            </form>
+        </div>
+    </div>
+</div>
+       
+    <div class="mb-4" style="width:1000;height:100">
+        {{ graph_div|safe }}
+    </div>
 
+<div class="container-fluid mt-4">
+    <div class="row justify-content-start">
+        <div class="col-auto mb-3">
+            <p class="h5">Descargar reporte de {{ mascota.nombre }}</p>
+
+            <form  method="POST" action="{% url 'mascotas_urls:descargar' mascota.id  %}">
+                {% csrf_token %}
+
+            <div class="form-group">
+                    <label for="selectTipo">Tipo de grafico </label>
+                    <select class="form-control" name="selectTipo" id="selectTipo">
+                    <option value="calorias">Calorias</option>
+                    <option value="peso">Peso</option>
+                    </select>
+                </div>
+
+                <label for="selectDias">Cantidad de días </label>
+                <div class="form-group">
+                    <select class="form-control" name="selectDias" id="selectDias">
+                    <option value="7">7</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="60">60</option>
+                    <option value="90">90</option>
+                    </select>
+                </div>
+
+                <label for="selectFormato">Formato </label>
+                <div class="form-group">
+                    <select class="form-control" name="selectFormato" id="selectFormato">
+                    <option value="csv">Csv</option>
+                    <option value="xlsx">Excel</option>
+                    <option value="ods">LibreOffice</option>
+                    </select>
+                </div>
+
+             <input class="btn-sm btn-success" type="submit" value="Descargar">
 
             </form>
         </div>
     </div>
 </div>
-
-            
-    
-    <div class="mb-4" style="width:1000;height:100">
-        {{ graph_div|safe }}
-    </div>
 
 {% endblock content %}

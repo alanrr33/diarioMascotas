@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from .models import User
+from .functions import hay_numeros
 
 class UserRegisterForm(forms.ModelForm):
 
@@ -15,6 +16,8 @@ class UserRegisterForm(forms.ModelForm):
             'placeholder':'Repetir Contraseña'
         }
     ))
+
+    
 
     class Meta:
         model=User
@@ -34,8 +37,25 @@ class UserRegisterForm(forms.ModelForm):
         password1=self.cleaned_data['password1']
         password2=self.cleaned_data['password2']
         email=self.cleaned_data['email']
-        
+        username=self.cleaned_data['username']
+        nombre=self.cleaned_data['nombre']
+        apellido=self.cleaned_data['apellido']
         email_valido=User.objects.email_unico(email)
+
+        if nombre:
+            x=hay_numeros(nombre)
+            if x==True:
+                self.add_error('nombre','Hay numeros en el nombre')
+            else:
+                pass
+        
+        if apellido:
+            x=hay_numeros(apellido)
+            if x==True:
+                self.add_error('apellido','Hay numeros en el apellido')
+            else:
+                pass
+            
 
         if email_valido==False:
             self.add_error('email',"El email ya se encuentra en uso")
@@ -52,8 +72,7 @@ class UserRegisterForm(forms.ModelForm):
             self.add_error('password2','La contraseña debe tener más de 5 caracteres')
         
 
-        username=self.cleaned_data['username']
-        nombre=self.cleaned_data['nombre']
+        
         #print(username)
         #print(nombre)
 

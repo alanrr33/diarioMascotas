@@ -1,4 +1,5 @@
 from django.db import models 
+from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 
 from .managers import UserManager
@@ -13,7 +14,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('O','Otro'),
     )
 
-    username=models.CharField(max_length=20,unique=True)
+    username=models.CharField(max_length=20,
+                            unique=True,
+                            validators=[ASCIIUsernameValidator(message='Ingrese un nombre de usuario valido.Letras, numeros, y los caracteres @/./+/-/_ ')],)
     email=models.EmailField()
     nombre=models.CharField(max_length=30,blank=True)
     apellido=models.CharField(max_length=30,blank=True)

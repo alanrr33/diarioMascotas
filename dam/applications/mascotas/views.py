@@ -1,9 +1,8 @@
-import plotly
-import plotly.express as px
-import pandas as pd
-import plotly.graph_objects as go
-
 from datetime import datetime, timedelta
+
+from django.views.generic.list import ListView
+
+import django_excel as excel
 
 from django.contrib import messages
 from django.views.generic import (ListView,
@@ -12,10 +11,13 @@ from django.views.generic import (ListView,
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.urls import reverse_lazy
+
 
 from applications.diario.models import Diario
 from .forms import MascotaRegisterForm,MascotaUpdateForm
 from .models import Mascota,PesoMascotaDiario
+from .functions import generar_grafico
 
 # Create your views here.
 
@@ -154,7 +156,6 @@ class DeleteMascotaView(LoginRequiredMixin,DeleteView):
 class ReportesMascotaView(LoginRequiredMixin,TemplateView):
     template_name="mascotas/reportes.html"
 
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -166,64 +167,74 @@ class ReportesMascotaView(LoginRequiredMixin,TemplateView):
         print(tipografico)
 
         if (self.request.GET.get('selectDias') != None):
-            dias=float(self.request.GET.get('selectDias'))
+            dias=int(self.request.GET.get('selectDias'))
             
 
         if tipografico=="calorias":
             if dias != None:
-                diarios=Diario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=dias))
-                if diarios:
-                    diccionario={"Calorias":[],"Dia":[]}
-                    for diario in diarios:
-                        diccionario['Calorias'].append(diario.total_cal)
-                        diccionario['Dia'].append(diario.fecha)
-                    #print(len(diccionario))
-                    
-                    f=pd.DataFrame(diccionario)
-                    fig = px.bar(f, x='Dia', y='Calorias',range_x=[datetime.now()-timedelta(days=dias),datetime.now()])
-                    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True,tickangle=35,fixedrange=True)
-                    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True,fixedrange=True)
-                
-                    fig.add_hline(y=mascota.meta,
-                    annotation_text="Meta diaria", 
-                    annotation_position="top right",
-                    annotation_font_size=10,
-                    annotation_font_color="orange"
-                    )
+                graph_div=generar_grafico(mascota,tipografico,dias)
+                context["graph_div"]=graph_div
 
-                    graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': False,})
-                    context["graph_div"]=graph_div
-        else:
-            if tipografico=="peso":
-                if dias != None:
-                    print ('tipo de grafico: %s' %tipografico)
-                    pesos=PesoMascotaDiario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=dias)).order_by('-fecha')
-                    if pesos:
-                        print ('pesos: %s' %pesos[0].peso)
-                        dic_peso={"Peso":[], "Dia":[]}
-
-                        for i in pesos:
-                            dic_peso['Peso'].append(i.peso)
-                            dic_peso['Dia'].append(i.fecha)
-                        
-                        #print ('diccionario de pesos: %s' %dic_peso)
-
-                        df=pd.DataFrame(dic_peso)
-                        print ('dataframe: %s' %df)
-
-                        fig = go.Figure()
-                        fig.add_trace(go.Scatter(x=df['Dia'], y=df['Peso'],
-                        mode='lines+markers',
-                        name='lines+markers'))
-
-
-                        graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': False,})
-                        context["graph_div"]=graph_div
-                        
-
-
+        elif tipografico=="peso":
+            if dias != None:
+                graph_div=generar_grafico(mascota,tipografico,dias)
+                context["graph_div"]=graph_div
 
         return context
+    
+
+def listresults(request,pk):
+    
+    tipografico=request.POST.get('selectTipo','')
+    cantdias=int(request.POST.get('selectDias',''))
+    formato=request.POST.get('selectFormato','')
+    mascota=Mascota.objects.get(pk=pk)
+
+    print('tipo de grafico {}, cantidad dias {}, formato: {}'.format(tipografico,cantdias,formato))
+    
+    # Definir los datos en una lista
+    export = [] 
+
+    if tipografico=='calorias':
+        # Se obtienen los datos del model y se agregan a la lista
+        diarios=Diario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=cantdias)).order_by('fecha')
+        if diarios:
+            export.append(['Fecha', 'Calorías'])
+            #formateamos la fecha al estilo "25-09-1996"
+            for diario in diarios:
+                export.append(["{0:%d-%m-%Y}".format(diario.fecha), diario.total_cal])
+                
+
+    if tipografico=='peso':
+        pesos=PesoMascotaDiario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=cantdias)).order_by('fecha')
+        if pesos:
+            export.append(['Fecha', 'Peso (kg)'])
+            #formateamos la fecha al estilo "25-09-1996"
+            for i in pesos:
+                export.append(["{0:%d-%m-%Y}".format(i.fecha),i.peso])
+
+    #obtenemos la fecha de hoy para añadirla al archivo
+
+    fechahoy    = datetime.now()
+    strFechahoy = fechahoy.strftime("%d%m%Y")
+    
+    # Transcribir la data a una hoja de calculo en memoria
+    sheet = excel.pe.Sheet(export)
+
+    # Generar el archivo desde la hoja en memoria con 
+    # un nombre de archivo que se recibira en el navegador
+
+    if formato == "csv":
+        return excel.make_response(sheet, "csv", file_name="Reporte-"+strFechahoy+".csv")
+    elif formato == "ods":
+        return excel.make_response(sheet, "ods", file_name="Reporte-"+strFechahoy+".ods")
+    elif formato == "xlsx":
+        return excel.make_response(sheet, "xlsx", file_name="Reporte-"+strFechahoy+".xlsx")
+    else:
+        messages.warning(request, 'formato {} no soportado'.format(formato))
+
+
+    
 
 
 
