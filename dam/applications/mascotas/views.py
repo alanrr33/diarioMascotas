@@ -191,7 +191,7 @@ def listresults(request,pk):
     mascota=Mascota.objects.get(pk=pk)
 
     print('tipo de grafico {}, cantidad dias {}, formato: {}'.format(tipografico,cantdias,formato))
-    
+
     # Definir los datos en una lista
     export = [] 
 
@@ -211,7 +211,7 @@ def listresults(request,pk):
             export.append(['Fecha', 'Peso (kg)'])
             #formateamos la fecha al estilo "25-09-1996"
             for i in pesos:
-                export.append(["{0:%d-%m-%Y}".format(i.fecha),i.peso])
+                export.append(["{0:%d-%m-%Y}".format(i.fecha),float(i.peso)])
 
     #obtenemos la fecha de hoy para añadirla al archivo
 

@@ -16,8 +16,6 @@ urlpatterns = [
     path('panel-mascota/<int:pk>/',PanelMascotaView.as_view(),name="panelmascota"),
     path('eliminar-mascotas/<int:pk>/',DeleteMascotaView.as_view(),name="delete"),
     path('reportes-mascotas/<int:pk>/',ReportesMascotaView.as_view(),name="reportes"),
-    #path('descargar/',listresults,name="descargar"),
     path('descargar/<int:pk>/',listresults,name="descargar"),
-
 
 ]
