@@ -1,17 +1,22 @@
 from django.contrib import messages
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, DeleteView, FormView
+from django.views.generic.edit import (CreateView, 
+                                        FormView)
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy,reverse
+from django.urls import (reverse_lazy,
+                            reverse)
 from django.http.response import HttpResponseRedirect
 
-
-from .forms import DiarioForm,EditarAlimentoForm
-from .models import Alimento,AlimentoConsumido
-
+from .forms import (DiarioForm,
+                    EditarAlimentoForm)
+from .models import (Alimento,
+                    AlimentoConsumido)
 from applications.diario.models import Diario
-from applications.mascotas.models import Mascota
+
+from .functions import (cal_x_gramo,
+                        cant_x_porcion,
+                        total_cal)
 
 
 
@@ -61,9 +66,9 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
         #calculos auxiliares
         #listas clean
         #obtener las calorias de cada alimento chequeado
-        lista_obj_alimentos,lista_cal_gramo_alimentos=Alimento.cal_x_gramo(alimentos)
-        lista_cantidad_x_porcion=Alimento.cant_x_porcion(cantidad_clean,porcion_clean)
-        lista_total_cal=Alimento.total_cal(lista_cantidad_x_porcion,lista_cal_gramo_alimentos)
+        lista_obj_alimentos,lista_cal_gramo_alimentos=cal_x_gramo(alimentos)
+        lista_cantidad_x_porcion=cant_x_porcion(cantidad_clean,porcion_clean)
+        lista_total_cal=total_cal(lista_cantidad_x_porcion,lista_cal_gramo_alimentos)
 
         alimentosConsumidos=[]
 
@@ -97,10 +102,10 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
                 messages.success(self.request,"Los alimentos han sido agregados con exito")
 
         else:
-            print('algo vino vacio o hay alguna diferencia en el largo')
-            print(len(cantidad_clean))
-            print(len(porcion_clean))
-            print(len(lista_obj_alimentos))
+            #print('algo vino vacio o hay alguna diferencia en el largo')
+            #print(len(cantidad_clean))
+            #print(len(porcion_clean))
+            #print(len(lista_obj_alimentos))
             messages.warning(self.request,"Para agregar los elementos debe completar todos sus campos!")
         
         return super(BuscarAlimentos, self).form_valid(form)
