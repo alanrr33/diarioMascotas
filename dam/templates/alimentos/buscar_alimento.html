@@ -1,4 +1,6 @@
+
 {% extends 'base.html' %}
+{% load static %}
 {% load i18n %}
 {% block navbar_secundaria %}
     {% if not diario %}
@@ -16,11 +18,49 @@
     <p class="h5">Agregar alimentos al diario del {{ diario.fecha }}</p>
     {% endlanguage %}
     <p>
+      <div id="app">
         <form method="GET" action="#">
-            <input type="text" placeholder="Ingrese nombre o marca" name="busqueda" id="busqueda">
-           <!-- {{ form.busqueda }}-->
+            <input type="text" placeholder="Ingrese nombre o marca" name="busqueda" id="busqueda" v-model="kword"></input>
+
             <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
+     
+        <br>
+      
+          <!--
+          <p>Selected alimentos: {$ lista_alimentos_agregados $}</p>
+          
+          <div class="col-6" v-for="alimento in lista_resultados" :key="alimento.id">
+            <input type="checkbox" :value="alimento" v-model="lista_alimentos_agregados" >
+            <span class="custom-control-description">{$ alimento.nombre $} {$ alimento.calorias $}</span>
+          </div>
+          
+            <div v-for="alimento in lista_resultados" :key="alimento.id">
+              <table class="table table-borderless  ">
+                <tbody>
+                  <tr class="table table-bordered" style="background-color: #f6f6f6;">
+                    <td class="col-5"> 
+                    <input type="checkbox" :value="alimento" v-model="lista_alimentos_agregados" >   
+                      {$ alimento.nombre $}, 
+                      {$ alimento.marca $},
+                      Calorias: {$ alimento.calorias $}
+                    </input>
+                    </td>
+                    <td class="text-center"><input type="number" name="cantidad" id="cantidad" min="1" oninput="this.value = 
+                        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+                    </td>
+                    <td class="text-center">de 
+                          <select name="medida" id="medida">
+                          <option selected value value=1>1 Gramo</option>
+                          <option value=100>100 Gramos</option>
+                          </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            -->
         </form>
+      </div>
     </p>
 
 
@@ -69,6 +109,7 @@
   </tbody>
 </table>
 
+
 {% if is_paginated %}
     <nav aria-label="123">
         <ul class="pagination pagination-sm">
@@ -98,11 +139,13 @@
 <button class="btn border-0" style="background-color: #70E000;" type="submit" >Agregar seleccionado</button>
 
 </form>
-{% block scripts %}
-  <script type="text/javascript">
 
-  
-  </script>
-{% endblock scripts %}
-        
 {% endblock content %}
+
+{% block js %}
+
+<script type="text/javascript" src="{% static 'vue/vue.js' %}">  </script>
+<script type="text/javascript"  src="{% static 'vue/axios.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vue/apps/buscarAlimento.js' %}">  </script>
+
+{% endblock js %}

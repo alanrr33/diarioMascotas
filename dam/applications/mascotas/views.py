@@ -91,7 +91,6 @@ class UpdateMascotaView(LoginRequiredMixin,FormView):
     def form_valid(self, form):
         mascota=Mascota.objects.get(pk=self.kwargs['pk'])
 
-
         nombre=form.cleaned_data['nombre']
         tipo=form.cleaned_data['tipo']
         edad=form.cleaned_data['edad']

@@ -59,6 +59,9 @@ INSTALLED_APPS = [
     'applications.diario',
     'applications.alimentos',
 
+    #apps de terceros
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [

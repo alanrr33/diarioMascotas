@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BuscarAlimentos,ListaAlimentos,AgregarAlimento,BorrarAlimento,EditarAlimento
+from .views import BuscarAlimentos,ListaAlimentos,AgregarAlimento,BorrarAlimento,EditarAlimento,BuscarAlimentoListApiView
 
 app_name="alimentos_urls"
 
@@ -9,5 +9,8 @@ urlpatterns = [
     path('agregar-alimento/',AgregarAlimento.as_view(),name="agregaralimento"),
     path('eliminar-alimento/<int:pk>/',BorrarAlimento.as_view(),name="eliminaralimento"),
     path('editar-alimento/<int:pk>/',EditarAlimento.as_view(),name="editaralimento"),
+    #apis
+    path('api/alimentos/buscar/',BuscarAlimentoListApiView.as_view(),name="buscaralimentoapi"),
+
 
 ]

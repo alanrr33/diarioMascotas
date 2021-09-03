@@ -1,3 +1,5 @@
+from rest_framework.generics import ListAPIView
+
 from django.contrib import messages
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import (CreateView, 
@@ -17,6 +19,7 @@ from applications.diario.models import Diario
 from .functions import (cal_x_gramo,
                         cant_x_porcion,
                         total_cal)
+from .serializers import AlimentoSerializer
 
 
 
@@ -244,3 +247,15 @@ class EditarAlimento(LoginRequiredMixin,FormView):
          return reverse('alimentos_urls:listaalimentos')
 
 
+"APIS"
+
+class BuscarAlimentoListApiView(ListAPIView):
+    serializer_class=AlimentoSerializer
+
+    def get_queryset(self):
+        kword=self.request.query_params.get('kword','')
+
+        return Alimento.objects.filter(
+            nombre__icontains=kword
+        ).order_by('nombre')
+    
