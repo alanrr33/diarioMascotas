@@ -11,6 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dam.settings.local')
+#cambiar de vuelta a local una vez terminado el deploy 'dam.settings.local'
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dam.settings.prod')
 
 application = get_wsgi_application()

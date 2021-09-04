@@ -1,3 +1,11 @@
+import io
+from django.http import FileResponse
+from numpy import exp
+from reportlab.pdfgen import canvas
+
+from reportlab.platypus import SimpleDocTemplate,Table
+from reportlab.lib.pagesizes import letter
+
 from datetime import datetime, timedelta
 
 from django.views.generic.list import ListView
@@ -198,7 +206,7 @@ def listresults(request,pk):
         # Se obtienen los datos del model y se agregan a la lista
         diarios=Diario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=cantdias)).order_by('fecha')
         if diarios:
-            export.append(['Fecha', 'Calorías'])
+            export.append(['Fecha', 'Calorias'])
             #formateamos la fecha al estilo "25-09-1996"
             for diario in diarios:
                 export.append(["{0:%d-%m-%Y}".format(diario.fecha), diario.total_cal])
@@ -219,9 +227,12 @@ def listresults(request,pk):
     
     # Transcribir la data a una hoja de calculo en memoria
     sheet = excel.pe.Sheet(export)
+    
 
     # Generar el archivo desde la hoja en memoria con 
     # un nombre de archivo que se recibira en el navegador
+
+   
 
     if formato == "csv":
         return excel.make_response(sheet, "csv", file_name="Reporte-"+strFechahoy+".csv")
@@ -229,6 +240,8 @@ def listresults(request,pk):
         return excel.make_response(sheet, "ods", file_name="Reporte-"+strFechahoy+".ods")
     elif formato == "xlsx":
         return excel.make_response(sheet, "xlsx", file_name="Reporte-"+strFechahoy+".xlsx")
+    #elif formato=='pdf':
+        #return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
     else:
         messages.warning(request, 'formato {} no soportado'.format(formato))
 

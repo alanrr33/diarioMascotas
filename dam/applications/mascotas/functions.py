@@ -36,7 +36,7 @@ def generar_grafico(mascota,tipografico,dias):
             annotation_font_color="orange"
             )
 
-            graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': False,})
+            graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': True,})
             
             return graph_div
 
@@ -62,6 +62,6 @@ def generar_grafico(mascota,tipografico,dias):
             name='lines+markers'))
 
 
-            graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': False,})
+            graph_div = plotly.offline.plot(fig, auto_open = False, output_type="div",config= {'displaylogo': False,'displayModeBar': True,})
 
             return graph_div

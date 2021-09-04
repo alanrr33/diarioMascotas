@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path,include
+from django.config import settings
+from django.config.urls.static import static
 from applications.users.views import Index
 
 urlpatterns = [
@@ -26,8 +28,8 @@ urlpatterns = [
     path('alimentos/',include('applications.alimentos.urls')),
     path('diario/',include('applications.diario.urls',namespace='diaro_urls')),
     path('',Index.as_view(),name="index")
-]
+]+static(settings.STATIC_URL, documento_root=settings.STATIC_ROOT)
 
-
+#remover parte final
 
 
