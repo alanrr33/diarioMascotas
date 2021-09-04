@@ -3,8 +3,6 @@ import mimetypes
 from pathlib import Path
 import json
 
-
-
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -135,6 +133,4 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
 
