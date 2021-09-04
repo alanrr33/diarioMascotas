@@ -6,8 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    #volver a cambiar a local una vez terminado deploy 'dam.settings.local'
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dam.settings.prod')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dam.settings.local')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

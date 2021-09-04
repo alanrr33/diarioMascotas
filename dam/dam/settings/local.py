@@ -1,14 +1,14 @@
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-"""DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME':get_secret('DB_NAME'),
@@ -17,16 +17,6 @@ ALLOWED_HOSTS = ['*']
         'HOST':'localhost',
         'PORT':'5432',
     }
-}"""
-
-#para deploy en heroku
-import dj_database_url
-from decouple import config
-
-DATABASES={
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
 }
 
 # Static files (CSS, JavaScript, Images)
