@@ -9,9 +9,10 @@ from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from .forms import (UserRegisterForm,
                     LoginForm,
-                    VerificationForm,)
+                    VerificationForm,
+                    ReestablecerPassForm)
 from .models import User
-from .functions import generador_cod
+from .functions import generador_cod,generador_pass_temp
 
 
 
@@ -41,6 +42,7 @@ class UserRegisterView(FormView):
             cod_registro=codigo,
             
         )
+
         #enviar codigo al mail del usuario
         asunto='Confirmación de email'
         mensaje='Codigo de verificación' + ' ' + codigo
@@ -100,7 +102,32 @@ class CodeVerificationView(FormView):
 
         return super(CodeVerificationView, self).form_valid(form)
 
+class ReestablecerPassView(FormView):
+    template_name='users/reestablecerpass.html'
+    form_class=ReestablecerPassForm
+    success_url=reverse_lazy('users_app:loginuser')
+    
+    def form_valid(self,form):
+        print('form valid')
+        email=form.cleaned_data['email']
+        messages.info(self.request, 'Se ha envíado un mail a su casilla con una contraseña temporal')
+        contra=generador_pass_temp()
 
+        #enviar pass al mail del usuario
+        asunto='Contraseña temporal'
+        mensaje='Esta es su contraseña temporal: ' + ' ' + contra
+        email_remitente='alanrr33@gmail.com'
+        
+        send_mail(asunto,mensaje,email_remitente,[form.cleaned_data['email'],])
+
+        #actualizamos la contraseña
+        user=User.objects.get(
+           email=email
+        )
+        user.set_password(contra)
+        user.save()
+
+        return super(ReestablecerPassView, self).form_valid(form)
 
 class LogoutView(View):
     

@@ -35,6 +35,20 @@
       </div>
     {% endif %}
 
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %} 
+      <br>
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <strong>
+              
+              {{ message }} <br>
+              
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
 
   {% endfor %}
 {% endif %}
@@ -46,8 +60,9 @@
                     <form method="POST">
                         {% csrf_token %}
                         {{ form|crispy }}
-                        <button type="submit" class="btn btn-success">Acceder</button>
+                        <button type="submit" class="btn btn-success mb-3">Acceder</button>
                     </form>
+                    <a href="{% url 'users_app:reestablecerpass' %}">¿Olvido su contraseña?</a>
                 </div>
             </div>
         </div>

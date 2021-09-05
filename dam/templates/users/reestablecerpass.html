@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}Confirmación{% endblock title %}
+{% block title %}Recuperar contraseña{% endblock title %}
 
     {% block content %}
 
-    <div class="container-fluid">
-        <p class="h4">Confirmación codigo<p>
-            <div class="row justify-content-start"> 
+    <div class="container-fluid mt-3">
+        <p class="h4 text-center">Ingrese email<p>
+            <div class="row justify-content-center"> 
                 <div class="col-auto" style="width:35%">
                     <form method="POST">
                         {% csrf_token %}

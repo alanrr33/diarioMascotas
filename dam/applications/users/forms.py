@@ -5,29 +5,105 @@ from .functions import hay_numeros
 
 class UserRegisterForm(forms.ModelForm):
 
-    password1=forms.CharField(label='Contraseña', required=True, widget=forms.PasswordInput(
+    """GENDER_CHOICES=(
+        ('M','Masculino'),
+        ('F','Femenino'),
+        ('O','Otro'),
+    )"""
+
+
+
+    nombre=forms.CharField(
+         
+        label='Nombre',
+        max_length=30,
+        required=True,
+        help_text='Ingrese su nombre o nombres',
+        widget=forms.TextInput(
+
+        attrs={
+            'placeholder':'Luis Alberto',
+        }
+    ))
+
+    apellido=forms.CharField(
+         
+        label='Apellido',
+        max_length=30,
+        required=True,
+        help_text='Ingrese su apellido o apellidos',
+        widget=forms.TextInput(
+
+        attrs={
+            'placeholder':'Jade Spinetta',
+        }
+    ))
+
+    """genero=forms.ChoiceField(
+        choices=GENDER_CHOICES, 
+        label='Genero',
+        required=True,
+        widget=forms.Select(
+
+        attrs={
+            
+        }
+    ))"""
+
+    email=forms.EmailField(
+         
+        label='Email',
+        required=True,
+        help_text='Ingrese su dirección de email',
+        widget=forms.EmailInput(
+
+        attrs={
+            'placeholder':'luisalberto@pepe.com',
+        }
+    ))
+
+    username=forms.CharField(
+         
+        label='Usuario',
+        min_length=5,
+        max_length=20,
+        required=True,
+        help_text='Nombre de usuario para poder acceder al sitio',
+        widget=forms.TextInput(
+
+        attrs={
+            'placeholder':'Nombre de usuario',
+        }
+    ))
+
+    password1=forms.CharField(
+        min_length=5,
+        label='Contraseña', 
+        required=True,
+        help_text='Ingrese una contraseña',
+        widget=forms.PasswordInput(
         attrs={
             'placeholder':'Contraseña'
         }
     ))
 
-    password2=forms.CharField(label='Contraseña', required=True, widget=forms.PasswordInput(
+    password2=forms.CharField(
+        min_length=5,
+        label='Contraseña', 
+        required=True, 
+        help_text='Repita la contraseña',
+        widget=forms.PasswordInput(
         attrs={
             'placeholder':'Repetir Contraseña'
         }
     ))
 
-    
 
     class Meta:
         model=User
-        fields=(
-            'username',
-            'email',
-            'nombre',
-            'apellido',
-            'genero',
 
+        fields=(
+            'genero',
         )
 
     #al hacer validacion de varios campos debemos sobreescribir el metodo clean
@@ -133,6 +209,31 @@ class VerificationForm(forms.Form):
         else:
             print('codigo incorrecto %s' % codigo)
             raise forms.ValidationError('Codigo incorrecto')
+
+class ReestablecerPassForm(forms.Form):
+    email=forms.EmailField(
+        required=True,
+        help_text='Ingrese la direccion de email con la que se registro',
+        widget=forms.EmailInput(
+        attrs={
+        'placeholder':'luis@gmail.com'
+        }
+
+        ))
+
+    def clean(self):
+        cleaned_data=super(ReestablecerPassForm, self).clean()
+
+        email=self.cleaned_data['email']
+        existeemail=User.objects.email_unico(email)
+        if  (existeemail==False):
+            print('miau')
+        else:
+            raise forms.ValidationError('No hay ningun usuario registrado con este email')
+
+        return cleaned_data
+
+
 
        
 

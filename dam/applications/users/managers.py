@@ -36,3 +36,4 @@ class UserManager(BaseUserManager, models.Manager):
             return True
     
     
+    

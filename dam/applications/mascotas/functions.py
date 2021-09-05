@@ -5,7 +5,6 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-import django_excel as excel
 
 from applications.diario.models import Diario
 from .models import Mascota,PesoMascotaDiario
