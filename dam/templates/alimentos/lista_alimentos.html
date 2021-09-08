@@ -17,9 +17,7 @@
       <br>
       <div class="alert alert-success alert-dismissible fade show" role="alert">
           <strong>
-              
-              {{ message }} <br>
-              
+             <p class="text-center"> {{ message }}</p>
           </strong>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -31,9 +29,7 @@
       <br>
       <div class="alert alert-warning alert-dismissible fade show" role="alert">
           <strong>
-              
-              {{ message }} <br>
-              
+             <p class="text-center"> {{ message }}</p>
           </strong>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -45,9 +41,7 @@
       <br>
       <div class="alert alert-warning alert-dismissible fade show" role="alert">
           <strong>
-              
-              {{ message }} <br>
-              
+             <p class="text-center"> {{ message }}</p>
           </strong>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -82,20 +76,19 @@
             {% for i in alimentos  %}
                 <tr class="table table-bordered " style="background-color: #f6f6f6;">
                 
-                    <td style="width: 70%;">
+                    <td title="Calorias por kilo: {{ i.calorias }}" style="width: 70%;">
                         {{ i.nombre }},
-                        {{ i.marca }},
-                        {{ i.calorias }} Cal/Kilo  
+                        {{ i.marca }}
                     </td>
 
                     <td style="width: 15%;"> 
-                        <a href="{% url 'alimentos_urls:editaralimento' i.id %}">
+                        <a title="Editar" href="{% url 'alimentos_urls:editaralimento' i.id %}">
                         <img src="{% static 'iconos/modificar.svg' %}" width="22" height="22" alt="icono-editar">
                         </a>
                     </td>
 
                     <td style="width: 15%;">
-                        <a href="{% url 'alimentos_urls:eliminaralimento' i.id %}">
+                        <a title="Borrar" href="{% url 'alimentos_urls:eliminaralimento' i.id %}">
                         <img src="{% static 'iconos/eliminar.svg' %}" width="22" height="22" alt="icono-eliminar">
                         </a>
                     </td>

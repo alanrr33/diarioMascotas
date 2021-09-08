@@ -87,20 +87,21 @@
     {% for i in comidas  %}
     <tr class="table" style="background-color: #D8DFEE ">
 
-      <td align="center">{{ i.alimento.marca }}, {{ i.alimento.nombre }}, {% widthratio i.cantidad 1 i.porcion %}  gramos</td>
+      <td align="center">{{ i.alimento.marca }}, 
+      {{ i.alimento.nombre }}, {% widthratio i.cantidad 1 i.porcion %}  gramos</td>
 
 
 
       <td align="center">{{ i.total_cal }}</td>
 
       <td align="center">
-        <a href="{% url 'diario_urls:editalimento' i.id %}">
+        <a title="Editar" href="{% url 'diario_urls:editalimento' i.id %}">
         <img src="{% static 'iconos/modificar.svg' %}" width="22" height="22">
         </a>
       </td>
 
       <td align="center">
-        <a href="{% url 'diario_urls:eliminaralimento' i.id %}">
+        <a title="Borrar" href="{% url 'diario_urls:eliminaralimento' i.id %}">
         <img src="{% static 'iconos/eliminar.svg' %}" width="22" height="22">
         </a>
       </td>
@@ -158,8 +159,8 @@
           <div class="row justify-content-center">
           
           <!-- paso fecha y peso del día para llevar un registro -->
-          <label for="peso">Peso:&nbsp;</label>
-          <input type="number" name="peso" id="peso" min="0" value="0" step=".01">
+          <label title="Actualización de peso opcional" for="peso">Peso:&nbsp;</label>
+          <input title="Actualización de peso opcional" type="number" name="peso" id="peso" min="0" value="0" step=".01">
           <!--<input type="hidden" name="fecha" id="fecha" value=" {{ diario.fecha }} ">-->
           </div>
           <button class="btn-sm btn-success mb-3 mt-3 ml-5" type="submit">Completar diario</button>
@@ -180,10 +181,18 @@
 {% block scripts %}
 <script type="text/javascript">
 window.onload = function difCalorias() {
-                  let y = document.getElementById ( "tdtotalcal" ).innerText;
-                  let z = document.getElementById ( "tdmeta" ).innerText;
-                  let x = Number(z) - Number(y);
-                  document.getElementById("tdresto").innerText=x;
+                  let totalcal = document.getElementById ( "tdtotalcal" ).innerText;
+                  let meta = document.getElementById ( "tdmeta" ).innerText;
+                  let resultado = Number(meta) - Number(totalcal);
+                  document.getElementById("tdresto").innerText=resultado;
+                  if (resultado<0){
+                      console.log('te pasaste')
+                      document.getElementById("tdresto").style.color = "red";
+                  }
+                  else if(resultado>=0){
+                    console.log('vas bien')
+                    document.getElementById("tdresto").style.color = "green";
+                  };
                   
                 }
 </script>

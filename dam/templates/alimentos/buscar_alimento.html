@@ -74,32 +74,41 @@
   <thead >
     <tr class="table table-borderless ">
       <th></th>
-      <th></th>
-      <th></th>
+      <th> Cantidad </th>
+      <th>Porcion</th>
     </tr>
   </thead>
   <tbody>
     {% for alimento in alimentos %}
     <tr class="table table-bordered" style="background-color: #f6f6f6;">
       <td > 
-      
-      <input type="checkbox" class="checkbox-{{ forloop.counter }}" 
+      <div title="Calorias = {{ alimento.calorias }} x Kg">
+      <input title='Marque para agregar' type="checkbox" class="checkbox-{{ forloop.counter }}" 
       name="cb_alimento" id="cb_alimento-{{ forloop.counter }}" 
       value="{{ alimento.id }}" /> 
-          
+        
         {{ alimento.nombre }}, 
-        {{ alimento.marca }},
-        Calorias por Kg: {{ alimento.calorias }}
+        {{ alimento.marca }}
+        </div>
 
       </input>
      
       </td>
-      <td><input type="number" name="cantidad" id="cantidad" min="1" oninput="this.value = 
+      <td>
+          <input title='Ingrese la cantidad' 
+            type="number"
+            placeholder="Cantidad" 
+            name="cantidad" 
+            id="cantidad" 
+            min="1" 
+            oninput="this.value = 
           !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+           x
+          
       </td>
-      <td>de <select name="medida" id="medida">
-            <option  selected value> -- Seleccione una opción -- </option>
-            <option value=1>1 Gramo</option>
+      <td>
+        <select title="Porción" name="medida" id="medida">
+            <option selected value value=1>1 Gramo</option>
             <option value=100>100 Gramos</option>
         </select>
       </td>

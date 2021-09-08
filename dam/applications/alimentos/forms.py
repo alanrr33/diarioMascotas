@@ -1,7 +1,5 @@
 from django import forms
-from django.db.models import fields
 from .models import AlimentoConsumido,Alimento
-from applications.diario.models import Diario
 
 class BusquedaForm(forms.Form):
     

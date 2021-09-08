@@ -33,7 +33,7 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
 
     #listview
     model = Alimento
-    paginate_by=5
+    paginate_by=6
     ordering='nombre'
     context_object_name="alimentos"
 
@@ -228,12 +228,14 @@ class EditarAlimento(LoginRequiredMixin,FormView):
 
         return super(EditarAlimento,self).form_valid(form)
     
-    def get_context_data(self, **kwargs):
+    """def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        comida=AlimentoConsumido.objects.get(pk=self.kwargs['pk'])
+        #comida=AlimentoConsumido.objects.get(pk=self.kwargs['pk'])
+        comida=Alimento.objects.get(pk=self.kwargs['pk'])
         self.pk=comida.diario.id
         context['diario'] =Diario.objects.get(pk=self.pk) 
-        return context
+        return context"""
+    #que hacía esto? solo un hechicero podría saberlo
     
     #sobreescribimos el metodo para obtener los kwargs para poder pasar la id al modelform
     def get_form_kwargs(self):
