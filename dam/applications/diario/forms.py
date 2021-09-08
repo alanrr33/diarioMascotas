@@ -20,8 +20,7 @@ class EditarAlimentoForm(forms.ModelForm):
         #modelo al que se conecta
         model=AlimentoConsumido
         fields=(
-            'cantidad',
-            #'porcion',    
+            'cantidad', 
         )
 
 

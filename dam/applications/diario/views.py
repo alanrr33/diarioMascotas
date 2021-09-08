@@ -111,7 +111,6 @@ class EditarAlimentoDiario(LoginRequiredMixin,FormView):
         print("##POST##")
         
         cantidad=form.cleaned_data['cantidad']
-        porcion=form.cleaned_data['porcion']
         comida=AlimentoConsumido.objects.get(pk=self.kwargs['pk'])
         self.pk=comida.diario.id
 
@@ -121,13 +120,6 @@ class EditarAlimentoDiario(LoginRequiredMixin,FormView):
             comida.save()
         else:
             print ('son iguales cantidad')
-
-        if porcion != comida.porcion:
-            print('no lo son, es {} y el form es {}'.format(comida.porcion,form.cleaned_data['porcion']))
-            comida.porcion=porcion
-            comida.save()
-        else:
-            print('son iguales porcion')
             
 
         return super(EditarAlimentoDiario,self).form_valid(form)
