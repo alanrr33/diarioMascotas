@@ -33,3 +33,10 @@ def total_cal(lista1,lista2):
 	            lista_total_cal.append(int(num1) * int(num2))
 
         return lista_total_cal
+
+def limpiar_lista(lista):
+        lista_clean=[]
+        for i in lista:
+                if i:
+                    lista_clean.append(i)
+        return lista_clean

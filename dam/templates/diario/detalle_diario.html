@@ -86,23 +86,22 @@
   <tbody>
     {% for i in comidas  %}
     <tr class="table" style="background-color: #D8DFEE ">
+     
+      <td align="center" style="font-size:14px;">{{ i.alimento.marca }}, 
+      {{ i.alimento.nombre }}, {{ i.cantidad }}  gramos  
+      </td>
 
-      <td align="center">{{ i.alimento.marca }}, 
-      {{ i.alimento.nombre }}, {% widthratio i.cantidad 1 i.porcion %}  gramos</td>
-
-
-
-      <td align="center">{{ i.total_cal }}</td>
-
-      <td align="center">
+      <td align="center" style="font-size:14px;">{{ i.total_cal }}</td>
+      
+      <td align="center" style="font-size:14px;">
         <a title="Editar" href="{% url 'diario_urls:editalimento' i.id %}">
-        <img src="{% static 'iconos/modificar.svg' %}" width="22" height="22">
+        <img src="{% static 'iconos/modificar.svg' %}" width="18" height="18">
         </a>
       </td>
 
-      <td align="center">
+      <td align="center" style="font-size:14px;">
         <a title="Borrar" href="{% url 'diario_urls:eliminaralimento' i.id %}">
-        <img src="{% static 'iconos/eliminar.svg' %}" width="22" height="22">
+        <img src="{% static 'iconos/eliminar.svg' %}" width="18" height="18">
         </a>
       </td>
 

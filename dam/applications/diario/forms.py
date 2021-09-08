@@ -21,7 +21,7 @@ class EditarAlimentoForm(forms.ModelForm):
         model=AlimentoConsumido
         fields=(
             'cantidad',
-            'porcion',    
+            #'porcion',    
         )
 
 
@@ -34,9 +34,9 @@ class EditarAlimentoForm(forms.ModelForm):
         #y podemos acceder a las propiedades de los campos
         alimento=AlimentoConsumido.objects.get(pk=alimentoid)
         self.fields['cantidad'].required = True
-        self.fields['porcion'].required=True
+        #self.fields['porcion'].required=True
         self.fields['cantidad'].initial=alimento.cantidad
-        self.fields['porcion'].initial=alimento.porcion
+        #self.fields['porcion'].initial=alimento.porcion
         
 
 

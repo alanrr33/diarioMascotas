@@ -24,16 +24,16 @@ class Alimento(models.Model):
         return str(self.id)+' '+self.nombre
 
 
-PORCION_CHOICES=(
+"""PORCION_CHOICES=(
     ('1','1'),
     ('100','100'),
-)
+)"""
     
 class AlimentoConsumido(models.Model):
     alimento=models.ForeignKey(Alimento,on_delete=models.CASCADE)
     diario=models.ForeignKey(Diario,on_delete=models.CASCADE)
     cantidad=models.PositiveIntegerField()
-    porcion=models.CharField(max_length=10,choices=PORCION_CHOICES,default="1g",help_text="Gramos")
+    #porcion=models.CharField(max_length=10,choices=PORCION_CHOICES,default="1g",help_text="Gramos")
     total_cal=models.PositiveIntegerField()
 
     objects=AlimentoConsumidoManager()
@@ -41,12 +41,7 @@ class AlimentoConsumido(models.Model):
     def __str__(self):
         return str(self.id)+' '+self.alimento.nombre
 
-    def limpiar_lista(lista):
-        lista_clean=[]
-        for i in lista:
-                if i:
-                    lista_clean.append(i)
-        return lista_clean
+    
     
 def update_total_cal_borrar(sender,instance,**kwargs):
     #actualizamos total calorias al borrar alimento
@@ -60,7 +55,7 @@ def update_calorias_alimento_consumido(sender,instance,**kwargs):
 
     calorias_gramo=(int((instance.alimento.calorias)/1000))
     nuevo_total_cal=(
-        ((int(instance.cantidad))*(int(instance.porcion))*calorias_gramo)
+        ((int(instance.cantidad))*calorias_gramo)
 
         )
     AlimentoConsumido.objects.filter(pk=instance.pk).update(total_cal=nuevo_total_cal)

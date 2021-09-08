@@ -18,7 +18,8 @@ from applications.diario.models import Diario
 
 from .functions import (cal_x_gramo,
                         cant_x_porcion,
-                        total_cal)
+                        total_cal,
+                        limpiar_lista)
 from .serializers import AlimentoSerializer
 
 
@@ -33,7 +34,7 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
 
     #listview
     model = Alimento
-    paginate_by=6
+    paginate_by=4
     ordering='nombre'
     context_object_name="alimentos"
 
@@ -53,39 +54,33 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
 
     def form_valid(self, form):
         #objetos
-        alimentos = AlimentoConsumido.limpiar_lista(self.request.POST.getlist('cb_alimento'))   
+        alimentos =limpiar_lista(self.request.POST.getlist('cb_alimento'))   
 
         #preciso objetos diario y alimento para poder insertarlo en la db
         diarioid=self.kwargs['pk']
         diario_obj=Diario.objects.get(pk=diarioid)
         self.pk=diarioid
 
-        cantidad_clean=AlimentoConsumido.limpiar_lista(self.request.POST.getlist('cantidad'))
+        cantidad_clean=limpiar_lista(self.request.POST.getlist('cantidad'))
         print (cantidad_clean)
 
-        porcion_clean=AlimentoConsumido.limpiar_lista(self.request.POST.getlist('medida'))
-        print(porcion_clean)
 
         #calculos auxiliares
         #listas clean
         #obtener las calorias de cada alimento chequeado
         lista_obj_alimentos,lista_cal_gramo_alimentos=cal_x_gramo(alimentos)
-        lista_cantidad_x_porcion=cant_x_porcion(cantidad_clean,porcion_clean)
-        lista_total_cal=total_cal(lista_cantidad_x_porcion,lista_cal_gramo_alimentos)
+        lista_total_cal=total_cal(cantidad_clean,lista_cal_gramo_alimentos)
 
         alimentosConsumidos=[]
 
-        if ((len(cantidad_clean)) == (len(porcion_clean)) == (len(lista_obj_alimentos))):
-            print("hay cosas aca")
    
-        if ((len(cantidad_clean)) == (len(porcion_clean)) == (len(lista_obj_alimentos))):
+        if ((len(cantidad_clean)) == (len(lista_obj_alimentos))):
 
             for i in (range(len(alimentos))):
                 alimentoconsumido=AlimentoConsumido(
                     alimento=lista_obj_alimentos[i],
                     diario=diario_obj,
                     cantidad=cantidad_clean[i],
-                    porcion=porcion_clean[i],
                     total_cal=lista_total_cal[i],
                 )
                 alimentosConsumidos.append(alimentoconsumido)
@@ -107,7 +102,6 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
         else:
             #print('algo vino vacio o hay alguna diferencia en el largo')
             #print(len(cantidad_clean))
-            #print(len(porcion_clean))
             #print(len(lista_obj_alimentos))
             messages.warning(self.request,"Para agregar los elementos debe completar todos sus campos!")
         

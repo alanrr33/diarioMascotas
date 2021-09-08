@@ -74,8 +74,7 @@
   <thead >
     <tr class="table table-borderless ">
       <th></th>
-      <th> Cantidad </th>
-      <th>Porcion</th>
+      <th> Cantidad (gramos) </th>
     </tr>
   </thead>
   <tbody>
@@ -95,7 +94,7 @@
      
       </td>
       <td>
-          <input title='Ingrese la cantidad' 
+          <input title='Ingrese la cantidad en gramos' 
             type="number"
             placeholder="Cantidad" 
             name="cantidad" 
@@ -103,14 +102,7 @@
             min="1" 
             oninput="this.value = 
           !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-           x
-          
-      </td>
-      <td>
-        <select title="Porción" name="medida" id="medida">
-            <option selected value value=1>1 Gramo</option>
-            <option value=100>100 Gramos</option>
-        </select>
+           
       </td>
 
     </tr>
