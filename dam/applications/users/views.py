@@ -116,7 +116,7 @@ class ReestablecerPassView(FormView):
         #enviar pass al mail del usuario
         asunto='Contraseña temporal'
         mensaje='Esta es su contraseña temporal: ' + ' ' + contra
-        email_remitente='alanrr33@gmail.com'
+        email_remitente='alanrrr33@gmail.com'
         
         send_mail(asunto,mensaje,email_remitente,[form.cleaned_data['email'],])
 
