@@ -1,6 +1,7 @@
 from django import forms
+from django.forms.widgets import NumberInput
 
-from .models import Mascota
+from .models import Mascota,Nota
 
 
 class MascotaRegisterForm(forms.ModelForm):
@@ -15,7 +16,8 @@ class MascotaRegisterForm(forms.ModelForm):
             'actividad',
             'tamaño',
             'esterilizado',
-            'objetivo'
+            'objetivo',
+            'imagen'
         )
     
     def clean(self):
@@ -91,7 +93,17 @@ class MascotaUpdateForm(forms.ModelForm):
                     
         return cleaned_data
     
+class AgregarNotaForm(forms.ModelForm):
+
+    fecha=forms.DateField(widget=NumberInput(attrs={'type': 'date'}))
     
+
+    class Meta:
+        model=Nota
+        fields=(
+            'importancia',
+            'texto',
+        )
 
 
 

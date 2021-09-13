@@ -21,7 +21,8 @@
 <div class="container-fluid">
   <div class="row justify-content-center"> 
     <form id="formAtras" method="GET"  >
-      <button type="submit" class="btn btn-success">&laquo;</button>
+      <button title="Día anterior" 
+      type="submit" class="btn btn-success">&laquo;</button>
       <input type="hidden" name="ir" value="atras">  
     </form>
       <div class="col-auto">
@@ -30,10 +31,30 @@
           </p>
       </div>
         <form id="formSiguiente" method="GET" >
-          <button type="submit" class="btn btn-success">&raquo;</button>
+          <button title="Día siguiente" 
+          type="submit" class="btn btn-success">&raquo;</button>
           <input type="hidden" name="ir" value="adelante">    
         </form>
+
+        <div class="container-fluid mt-2">
+          <div class="row justify-content-center">
+              <div title='Selecciona la fecha del diario que desea ir' class="col-auto mb-2">
+                  <form id="formSelectorFecha" method="GET">
+                      <p class="h6  mb-1">O seleccione una fecha</p>
+                      <input type="date" name="selectorFecha" id="selectorFecha" >
+                      <button type="submit" class="btn-sm btn-primary" >Ir</button>
+                      <input type="hidden" name="ir" value="fechaSeleccionada">         
+                  </form>
+              </div>
+          </div>
+      </div>
+
+
   </div>
+    
+
+
+
 </div>
 {% endlanguage %}
 
@@ -88,8 +109,9 @@
     <tr class="table" style="background-color: #D8DFEE ">
      
       <td align="center" style="font-size:14px;">{{ i.alimento.marca }}, 
-      {{ i.alimento.nombre }}, {{ i.cantidad }}  gramos  
+      {{ i.alimento.nombre }}, {{ i.cantidad }}  gramos
       </td>
+      
 
       <td align="center" style="font-size:14px;">{{ i.total_cal }}</td>
       
@@ -158,11 +180,11 @@
           <div class="row justify-content-center">
           
           <!-- paso fecha y peso del día para llevar un registro -->
-          <label title="Actualización de peso opcional" for="peso">Peso:&nbsp;</label>
-          <input title="Actualización de peso opcional" type="number" name="peso" id="peso" min="0" value="0" step=".01">
+          <label title="Actualización de peso opcional" for="peso">Peso mascota :&nbsp;</label>
+          <input title="Actualización de peso opcional" type="number" name="peso" id="peso" min="1" max="1000" value="0" step=".01" size="5" >
           <!--<input type="hidden" name="fecha" id="fecha" value=" {{ diario.fecha }} ">-->
           </div>
-          <button class="btn-sm btn-success mb-3 mt-3 ml-5" type="submit">Completar diario</button>
+          <button class="btn-sm btn-success mb-3 mt-3 ml-3" type="submit">Completar diario</button>
           <input type="hidden" name="completar" id="completar" value="completar">
           <input type="hidden" name="difcal" id="difcal" value="1">
           
@@ -194,6 +216,7 @@ window.onload = function difCalorias() {
                   };
                   
                 }
+
 </script>
 
 {% endblock scripts %}

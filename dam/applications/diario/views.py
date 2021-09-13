@@ -34,11 +34,12 @@ class VerDiarios(LoginRequiredMixin,ListView):
         return super(VerDiarios, self).dispatch(request, *args, **kwargs)
 
     #creacion del diario a partir del boton
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
        
-        print('###POST###')
+        print('### ver diario get ###')
         print(self.kwargs['pk'])
-        fecha=self.request.POST.get('selectorFecha','')
+        #fecha=self.request.POST.get('selectorFecha','')
+        fecha=datetime.today()
         print('fecha ',fecha)   
 
         mascota=Mascota.objects.get(pk=self.kwargs['pk'])
@@ -269,8 +270,37 @@ class DetalleDiario(LoginRequiredMixin,FormView,TemplateView):
                 #si estaba creado
                 print('ya existe un diario para esta fecha')
                 return HttpResponseRedirect(reverse('diario_urls:detallediario', kwargs={'pk': obj.id}))
+            
+
+        if valor=="fechaSeleccionada":
+            print('vamos a la fecha')
+            fecha_ir=self.request.GET.get('selectorFecha','')
+
+            if fecha_ir:
+                print('hay fecha seleccionada')
+
+                obj, created=Diario.objects.get_or_create(
+                fecha=fecha_ir,
+                mascota=mascota,
+                defaults={
+                    'mascota':mascota,
+                }
+                )
+
+                if created:
+                    print('diario creado para la fecha seleccionada')
+                    diario=Diario.objects.get(mascota=mascota,fecha=fecha_ir)
+                    return HttpResponseRedirect(reverse('diario_urls:detallediario', kwargs={'pk': diario.id}))
+                else:
+                    #si estaba creado
+                    print('ya existe un diario para esta fecha')
+                    return HttpResponseRedirect(reverse('diario_urls:detallediario', kwargs={'pk': obj.id}))
+            else:
+                print('no hay fecha seleccionada')
 
         return super(DetalleDiario,self).get(request, *args, **kwargs)
+
+        
 
 
     def form_valid(self, form):

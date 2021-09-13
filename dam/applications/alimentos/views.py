@@ -17,7 +17,6 @@ from .models import (Alimento,
 from applications.diario.models import Diario
 
 from .functions import (cal_x_gramo,
-                        cant_x_porcion,
                         total_cal,
                         limpiar_lista)
 from .serializers import AlimentoSerializer
@@ -41,9 +40,14 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
     
     def get_queryset(self):
         busqueda=self.request.GET.get('busqueda')
+        diario_pk=self.kwargs['pk']
+        diario=Diario.objects.get(pk=diario_pk)
+        tipomascota=diario.mascota.tipo
+        print('tipo mascota = %s' %tipomascota)
+
         if not busqueda:
             busqueda=""
-        resultado=Alimento.objects.buscar_alimentos(busqueda)
+        resultado=Alimento.objects.buscar_alimentos(busqueda).filter(tipo_mascota=tipomascota)
         return resultado
 
     def get_context_data(self, **kwargs):

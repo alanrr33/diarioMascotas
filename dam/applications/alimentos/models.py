@@ -5,6 +5,10 @@ from applications.users.models import User
 from applications.diario.models import Diario
 from .managers import AlimentoManager,AlimentoConsumidoManager
 
+TIPO_MASCOTA_CHOICES=(
+    ('Gato','Gato'),
+    ('Perro','Perro'),
+)
 
 
 class Alimento(models.Model):
@@ -15,6 +19,7 @@ class Alimento(models.Model):
     calorias=models.PositiveIntegerField(blank=False,help_text="por kg")
     creada_por=models.ForeignKey(User,on_delete=models.CASCADE)
     creada_el=models.DateField(auto_now_add=True)
+    tipo_mascota=models.CharField(max_length=5,choices=TIPO_MASCOTA_CHOICES,default='Gato',blank=False)
 
 
     objects=AlimentoManager()
@@ -23,17 +28,11 @@ class Alimento(models.Model):
     def __str__(self):
         return str(self.id)+' '+self.nombre
 
-
-"""PORCION_CHOICES=(
-    ('1','1'),
-    ('100','100'),
-)"""
-    
+ 
 class AlimentoConsumido(models.Model):
     alimento=models.ForeignKey(Alimento,on_delete=models.CASCADE)
     diario=models.ForeignKey(Diario,on_delete=models.CASCADE)
     cantidad=models.PositiveIntegerField()
-    #porcion=models.CharField(max_length=10,choices=PORCION_CHOICES,default="1g",help_text="Gramos")
     total_cal=models.PositiveIntegerField()
 
     objects=AlimentoConsumidoManager()

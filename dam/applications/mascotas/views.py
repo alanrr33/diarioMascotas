@@ -5,9 +5,11 @@ from django.views.generic.list import ListView
 import django_excel as excel
 
 from django.contrib import messages
-from django.views.generic import (ListView,
+from django.views.generic import (
+                                ListView,
                                 DeleteView,
-                                TemplateView)
+                                TemplateView
+                                )
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -15,8 +17,12 @@ from django.urls import reverse_lazy
 
 
 from applications.diario.models import Diario
-from .forms import MascotaRegisterForm,MascotaUpdateForm
-from .models import Mascota,PesoMascotaDiario
+from .forms import (
+                    MascotaRegisterForm,
+                    MascotaUpdateForm,
+                    AgregarNotaForm,
+                    )
+from .models import Mascota,PesoMascotaDiario,Nota
 from .functions import generar_grafico
 
 # Create your views here.
@@ -39,6 +45,7 @@ class MascotaRegisterView(LoginRequiredMixin,FormView):
         tamaño=form.cleaned_data['tamaño']
         esterilizado=form.cleaned_data['esterilizado']
         objetivo=form.cleaned_data['objetivo']
+        imagen=form.cleaned_data['imagen']
 
         
         Mascota.objects.create_mascota(
@@ -52,6 +59,7 @@ class MascotaRegisterView(LoginRequiredMixin,FormView):
             tamaño=tamaño,
             esterilizado=esterilizado,
             objetivo=objetivo,
+            imagen=imagen,
         )
         
         return super(MascotaRegisterView,self).form_valid(form)
@@ -181,7 +189,7 @@ class ReportesMascotaView(LoginRequiredMixin,TemplateView):
 
         return context
     
-
+# generar el reporte en memoria y devolverlo a traves de una http response
 def listresults(request,pk):
     
     tipografico=request.POST.get('selectTipo','')
@@ -233,8 +241,44 @@ def listresults(request,pk):
         messages.warning(request, 'formato {} no soportado'.format(formato))
 
 
+class AgregarNotaView(LoginRequiredMixin,FormView):
+    template_name="mascotas/notas.html"
+    form_class=AgregarNotaForm
+    success_url=reverse_lazy('mascotas_urls:listarmascotas')
+
+    def form_valid(self, form):
+        mascota_id=self.kwargs['pk']
+        
+        mascota=Mascota.objects.get(pk=mascota_id)
+        print('mascota id {}, mascota : {}'.format(mascota_id,mascota))
+
+        fecha=form.cleaned_data['fecha']
+        importancia=form.cleaned_data['importancia']
+        texto=form.cleaned_data['texto']
+
+        print('fecha: {} importancia {} texto {}'.format(fecha,importancia,texto))
+
+        Nota.objects.create(
+            mascota=mascota,
+            fecha=fecha,
+            importancia=importancia,
+            texto=texto
+
+        )
+    
+        return super(AgregarNotaView,self).form_valid(form)
     
 
+class PerfilMascotaView(LoginRequiredMixin,ListView):
+    template_name ="mascotas/perfilmascota.html"
+    model = Mascota
+    #paginate_by=3
+    #ordering='nombre'
+    #context_object_name='lista_mascotas'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mascota'] =Mascota.objects.get(pk=self.kwargs['pk']) 
+        return context
 
     

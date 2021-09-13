@@ -54,6 +54,7 @@ class Mascota(models.Model):
     tamaño=models.CharField(max_length=15,choices=TAMAÑO_CHOICES,blank=False,default="Mediano")
     esterilizado=models.BooleanField(default=False,help_text="Tildado = Si")
     objetivo=models.CharField(max_length=15,choices=OBJETIVO_CHOICES, default="Mantener peso")
+    imagen=models.ImageField('Imagen',upload_to='Imgmascotas/',blank=True)
 
   
 
@@ -79,6 +80,27 @@ class PesoMascotaDiario(models.Model):
 
     def __str__(self):
         return str(self.id)+' '+self.mascota.nombre
+
+class Nota(models.Model):
+
+    IMPORTANCIA_CHOICES=(
+        ('Normal','Normal'),
+        ('Moderada','Moderada'),
+        ('Alta','Alta'),
+    )
+
+    class Meta:
+        ordering=['id']
+
+    mascota=models.ForeignKey(Mascota,on_delete=models.CASCADE)
+    fecha=models.DateField(auto_now_add=False)
+    importancia=models.CharField(max_length=8,choices=IMPORTANCIA_CHOICES,blank=False)
+    texto=models.CharField(max_length=200,blank=False,default="Nota")
+
+    def __str__(self):
+        return str(self.id)+' '+self.mascota.nombre
+    
+
     
 
 
