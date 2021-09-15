@@ -165,7 +165,7 @@ class LoginForm(forms.Form):
     username=forms.CharField(label='Usuario', required=True, widget=forms.TextInput(
         attrs={
             'placeholder':'Usuario',
-            'style': '{ margin:10px }',
+            
         }
     ))
 
@@ -174,6 +174,9 @@ class LoginForm(forms.Form):
             'placeholder':'Contraseña'
         }
     ))
+
+
+    
     
     def clean(self):
         cleaned_data=super(LoginForm, self).clean()
@@ -233,8 +236,56 @@ class ReestablecerPassForm(forms.Form):
 
         return cleaned_data
 
+class PanelUsuarioForm(forms.Form):
+    password1=forms.CharField(
+        min_length=5,
+        label='Contraseña', 
+        required=True,
+        help_text='Ingrese una contraseña nueva',
+        widget=forms.PasswordInput(
+        attrs={
+            'placeholder':'Contraseña'
+        }
+    ))
+
+    password2=forms.CharField(
+        min_length=5,
+        label='Contraseña', 
+        required=True, 
+        help_text='Repita la contraseña nueva',
+        widget=forms.PasswordInput(
+        attrs={
+            'placeholder':'Repetir Contraseña'
+        }
+    ))
 
 
+    class Meta:
+        model=User
+
+        fields=(
+            'genero',
+        )
+
+    def clean(self):
+        cleaned_data=super(PanelUsuarioForm, self).clean()
+
+        password1=self.cleaned_data['password1']
+        password2=self.cleaned_data['password2']
+
+        if password1 and password2:
+            if password1 != password2:
+                self.add_error('password2','Las contraseñas no coinciden')
+
+        if (len(password1)<5):
+            self.add_error('password1','La contraseña debe tener más de 5 caracteres')
+        
+        if (len(password2)<5):
+            self.add_error('password2','La contraseña debe tener más de 5 caracteres')
+        
+
+
+        return cleaned_data
        
 
             

@@ -1,9 +1,66 @@
 {% extends 'base.html' %}
-{% block navbar_secundaria %}
-{% include 'includes/navbarmascotas.html' %}
-{% endblock navbar_secundaria %}
+{% load crispy_forms_tags %}
+{% block title %}Panel usuario{% endblock title %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages  %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      <br>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>
+             <p class="text-center"> {{ message }}</p>
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} 
+      <br>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>
+             <p class="text-center"> {{ message }}</p>
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %} 
+      <br>
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <strong>
+             <p class="text-center"> {{ message }}</p>
+          </strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    {% endif %}
 
 
+  {% endfor %}
+{% endif %}
 
-{% block title %}Panel{% endblock title %}
+<div class="container-fluid mt-4">
+      <p class="h4 text-center">Panel de usuario<p>
+      <div class="row justify-content-center"> 
+          <div class="col-auto" style="width:35%">
+              <form method="POST">
+                  {% csrf_token %}
+                  {{ form|crispy }}
+                  <button type="submit" class="btn btn-success mb-4">Cambiar</button>
+              </form>
+          </div>
+      </div>  
+</div>
 
+{% block footerclass %}
+<footer class="bg-dark text-center text-white fixed-bottom mt-auto" style="background-color: #70E000 ">
+{% endblock %}
+{% endblock content %}

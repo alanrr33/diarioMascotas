@@ -94,7 +94,8 @@
                     href="{% url 'mascotas_urls:reportes' mascota.id %}">Reportes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Agregar nota</a>
+                    <a class="nav-link" 
+                    href="{% url 'mascotas_urls:notas' mascota.id %}">Agregar nota</a>
                 </li>
             </ul>
 
@@ -140,6 +141,67 @@
               </div>
           </div>
       </div>
+
+
+<div id="accordion">
+<br>
+
+
+    {% if notas %}
+    Aqui estan sus notas:
+        {% for nota in notas  %}
+        
+            <div class="card ">
+                <!--para cambiarle los colores a las cabeceras de las notas -->
+
+                    {% if nota.importancia == "Normal" %}
+                        <div class="card-header p-3 mb-2 bg-primary " id="headingOne">
+                    {% elif nota.importancia == "Moderada" %}
+                        <div class="card-header p-3 mb-2 bg-warning text-dark" id="headingOne">
+                    {% elif nota.importancia == "Alta" %}
+                        <div class="card-header p-3 mb-2 bg-danger text-dark" id="headingOne">
+                    
+                {% endif %} 
+                <h5 class="mb-0">
+                    <button class="btn" data-toggle="collapse" data-target="#collapse{{forloop.counter}}" 
+                    aria-expanded="true" aria-controls="collapseOne">
+                    {{ nota.fecha }} <a title="Borrar" href="#">
+                   
+                    </button>
+                     <img src="{% static 'iconos/cesto.svg' %}" width="18" height="18">
+                    </a>
+                </h5>
+                </div>
+
+                <div id="collapse{{forloop.counter}}" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+
+                        {% if nota.importancia == "Normal" %}
+                            <p class="text-primary">{{ nota.texto }}</p>
+                        {% elif nota.importancia == "Moderada" %}
+                            <p class="text-warning">{{ nota.texto }}</p>
+                        {% elif nota.importancia == "Alta" %}
+                            <p class="text-danger">{{ nota.texto }}</p>
+                        {% endif %} 
+
+                        
+                    </div>
+                </div>
+            </div>
+        
+        {% endfor %}
+    {% else %}
+    No hay notas
+
+    {% endif %}
+
+
+  </div>
+</div>
+
+    
+   
+
 
 
 

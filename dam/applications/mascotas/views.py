@@ -22,7 +22,11 @@ from .forms import (
                     MascotaUpdateForm,
                     AgregarNotaForm,
                     )
-from .models import Mascota,PesoMascotaDiario,Nota
+from .models import (
+                    Mascota,
+                    PesoMascotaDiario,
+                    Nota
+                    )
 from .functions import generar_grafico
 
 # Create your views here.
@@ -278,7 +282,9 @@ class PerfilMascotaView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        mascota=Mascota.objects.get(pk=self.kwargs['pk']) 
         context['mascota'] =Mascota.objects.get(pk=self.kwargs['pk']) 
+        context['notas']=Nota.objects.filter(mascota=mascota).order_by('fecha')
         return context
 
     

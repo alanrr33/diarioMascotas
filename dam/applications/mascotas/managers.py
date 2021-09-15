@@ -35,4 +35,5 @@ class MascotaManager(models.Manager):
         return resultado
 
 
+
     

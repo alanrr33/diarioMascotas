@@ -1,5 +1,13 @@
 from django.urls import path
-from .views import UserRegisterView,LoginUser,LogoutView,HomePage,CodeVerificationView,ReestablecerPassView
+from .views import (
+                    UserRegisterView,
+                    LoginUser,
+                    LogoutView,
+                    HomePage,
+                    CodeVerificationView,
+                    ReestablecerPassView,
+                    PanelUsuarioView
+                    )
 
 app_name='users_app'
 
@@ -10,6 +18,7 @@ urlpatterns = [
     path('panel/',HomePage.as_view(),name="paneluser"),
     path('user-verificacion/<int:pk>/',CodeVerificationView.as_view(),name="userverificacion"),
     path('reestablecerpass/',ReestablecerPassView.as_view(),name="reestablecerpass"),
+    path('panel-usuario/',PanelUsuarioView.as_view(),name="panelusuario"),
     
 
 ]

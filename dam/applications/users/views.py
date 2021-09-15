@@ -7,10 +7,12 @@ from django.urls import reverse_lazy,reverse
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import (UserRegisterForm,
                     LoginForm,
                     VerificationForm,
-                    ReestablecerPassForm)
+                    ReestablecerPassForm,
+                    PanelUsuarioForm)
 from .models import User
 from .functions import generador_cod,generador_pass_temp
 
@@ -142,6 +144,22 @@ class HomePage(LoginRequiredMixin,TemplateView):
 
 class Index(TemplateView):
     template_name="users/index.html"
+
+class PanelUsuarioView(LoginRequiredMixin,FormView):
+    template_name='users/panel.html'
+    form_class=PanelUsuarioForm
+    success_url=reverse_lazy('users_app:loginuser')
+
+
+    def form_valid(self, form):
+
+        print(form.cleaned_data['password1'])
+        print(form.cleaned_data['password2'])
+
+
+
+
+        return super(PanelUsuarioView,self).form_valid(form)
 
 
 
