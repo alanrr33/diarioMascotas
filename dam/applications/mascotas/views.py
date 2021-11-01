@@ -1,6 +1,13 @@
 from datetime import datetime, timedelta
 
+from rest_framework.generics import ListAPIView
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+
 from django.views.generic.list import ListView
+
+from django.http import HttpResponseRedirect
 
 import django_excel as excel
 
@@ -12,8 +19,7 @@ from django.views.generic import (
                                 )
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 
 
 from applications.diario.models import Diario
@@ -28,6 +34,8 @@ from .models import (
                     Nota
                     )
 from .functions import generar_grafico
+from .filters import NotaFilter
+from .serializers import MascotaSerializer
 
 # Create your views here.
 
@@ -111,6 +119,7 @@ class UpdateMascotaView(LoginRequiredMixin,FormView):
         tamaño=form.cleaned_data['tamaño']
         esterilizado=form.cleaned_data['esterilizado']
         objetivo=form.cleaned_data['objetivo']
+        imagen=form.cleaned_data['imagen']
 
         if nombre!=mascota.nombre:
             print('campo nombre con diferencias')
@@ -151,6 +160,12 @@ class UpdateMascotaView(LoginRequiredMixin,FormView):
             print('campo objetivo con diferencias')
             mascota.objetivo=objetivo
             messages.success(self.request, 'Objetivo cambiado con exito!')
+        
+        if imagen:
+            print('imagen cambiada')
+            mascota.imagen=imagen
+            messages.success(self.request, 'Imagen cambiada con exito!')
+
         
         mascota.save()
 
@@ -210,7 +225,7 @@ def listresults(request,pk):
         # Se obtienen los datos del model y se agregan a la lista
         diarios=Diario.objects.filter(mascota=mascota,fecha__gte=datetime.now()-timedelta(days=cantdias)).order_by('fecha')
         if diarios:
-            export.append(['Fecha', 'Calorías'])
+            export.append(['Fecha', 'Calorias'])
             #formateamos la fecha al estilo "25-09-1996"
             for diario in diarios:
                 export.append(["{0:%d-%m-%Y}".format(diario.fecha), diario.total_cal])
@@ -248,7 +263,6 @@ def listresults(request,pk):
 class AgregarNotaView(LoginRequiredMixin,FormView):
     template_name="mascotas/notas.html"
     form_class=AgregarNotaForm
-    success_url=reverse_lazy('mascotas_urls:listarmascotas')
 
     def form_valid(self, form):
         mascota_id=self.kwargs['pk']
@@ -269,22 +283,72 @@ class AgregarNotaView(LoginRequiredMixin,FormView):
             texto=texto
 
         )
+
+        return HttpResponseRedirect(
+            reverse(
+                'mascotas_urls:perfil',
+                kwargs={'pk': mascota_id}
+            )
+        )
     
-        return super(AgregarNotaView,self).form_valid(form)
     
 
 class PerfilMascotaView(LoginRequiredMixin,ListView):
     template_name ="mascotas/perfilmascota.html"
-    model = Mascota
-    #paginate_by=3
-    #ordering='nombre'
-    #context_object_name='lista_mascotas'
+    filterset_class=NotaFilter
+    paginate_by=5
+    context_object_name='notas'
+    #ordering='-fecha'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        mascota=Mascota.objects.get(pk=self.kwargs['pk']) 
-        context['mascota'] =Mascota.objects.get(pk=self.kwargs['pk']) 
-        context['notas']=Nota.objects.filter(mascota=mascota).order_by('fecha')
+        context['mascota'] =Mascota.objects.get(pk=self.kwargs['pk'])
+
+        # Pass the filterset to the template - it provides the form.
+        context['filterset'] = self.filterset
         return context
 
+    def get_queryset(self):
+        mascota=Mascota.objects.get(pk=self.kwargs['pk'])
+        query=Nota.objects.filter(mascota=mascota).order_by('fecha').exclude(archivado=True)
+
+        # Then use the query parameters and the queryset to
+        # instantiate a filterset and save it as an attribute
+        # on the view instance for later.
+        self.filterset = self.filterset_class(self.request.GET, queryset=query)
+        # Return the filtered queryset
+        return self.filterset.qs.distinct()
+
+
+#uso una vista en forma de funcion para archivar la nota ya que no necesita otra pagina
+@login_required
+def borrarnota(request,pk):
     
+    nota=get_object_or_404(Nota,pk=pk)
+
+    if request.method=="GET":
+        nota.archivado=True
+        nota.save()
+        print('mascotaid %s' % nota.mascota.id)
+        
+        return HttpResponseRedirect(
+            reverse(
+                'mascotas_urls:perfil',
+                kwargs={'pk': nota.mascota.id}
+            )
+        )
+
+
+
+"APIS"
+
+#Mascota
+class BuscarMascotaApiView(ListAPIView):
+    serializer_class=MascotaSerializer
+
+    def get_queryset(self):
+        kword=self.request.query_params.get('kword','')
+
+        return Mascota.objects.filter(
+            id__icontains=kword
+        ).order_by('id')

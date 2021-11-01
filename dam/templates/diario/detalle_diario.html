@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
+
+
 {% block navbar_secundaria %}
-    {% if not diario %}
-    {% include 'includes/navbarmascotas.html' %}
-    {% else %}
+    {% if diario %}
     {% include 'includes/navbarbarmascdiarios.html' %}
     {% endif %}
 {% endblock navbar_secundaria %}
@@ -181,7 +181,7 @@
           
           <!-- paso fecha y peso del día para llevar un registro -->
           <label title="Actualización de peso opcional" for="peso">Peso mascota :&nbsp;</label>
-          <input title="Actualización de peso opcional" type="number" name="peso" id="peso" min="1" max="1000" value="0" step=".01" size="5" >
+          <input title="Actualización de peso opcional" type="number" name="peso" id="peso" min="0" max="1000" value="0" step=".01" size="5" >
           <!--<input type="hidden" name="fecha" id="fecha" value=" {{ diario.fecha }} ">-->
           </div>
           <button class="btn-sm btn-success mb-3 mt-3 ml-3" type="submit">Completar diario</button>

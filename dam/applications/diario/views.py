@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from rest_framework.generics import ListAPIView
+
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
 from django.views.generic.edit import FormView
@@ -10,7 +12,12 @@ from django.urls import reverse,reverse_lazy
 from django.shortcuts import redirect
 
 from .models import Diario
-from .forms import EditarAlimentoForm,CompletarDiarioForm
+from .forms import (
+                    EditarAlimentoForm,
+                    CompletarDiarioForm
+                    )
+
+from .serializers import DiarioSerializer
 
 from applications.alimentos.models import AlimentoConsumido
 from applications.mascotas.models import Mascota,PesoMascotaDiario
@@ -312,26 +319,27 @@ class DetalleDiario(LoginRequiredMixin,FormView,TemplateView):
         diario_obj=Diario.objects.get(pk=self.kwargs['pk'])
         peso_dia=self.request.POST.get('peso','')
         
+        
 
         if completar=="completar":
-            print('completar diario')
+            peso=float(peso_dia)
+            if peso>0:
+                obj, created=PesoMascotaDiario.objects.update_or_create(
+                mascota=mascota,
+                fecha=diario.fecha,
+                
+                defaults={
+                    'mascota':mascota,
+                    'fecha':diario.fecha,
+                    'peso':peso_dia,
+                }
+                )
 
-            obj, created=PesoMascotaDiario.objects.update_or_create(
-            mascota=mascota,
-            fecha=diario.fecha,
-            
-            defaults={
-                'mascota':mascota,
-                'fecha':diario.fecha,
-                'peso':peso_dia,
-            }
-            )
-
-            if created:
-                messages.success(self.request, 'Creada entrada de peso para la mascota')          
-            else:
-                #si estaba creado se actualiza
-                messages.success(self.request, 'Peso actualizado con exito a %s kg ' % obj.peso)    
+                if created:
+                    messages.success(self.request, 'Creada entrada de peso para la mascota')          
+                else:
+                    #si estaba creado se actualiza
+                    messages.success(self.request, 'Peso actualizado con exito a %s kg ' % obj.peso)    
 
 
 
@@ -351,4 +359,16 @@ class DetalleDiario(LoginRequiredMixin,FormView,TemplateView):
          #print(self.kwargs.get('pk'))
          return reverse('diario_urls:detallediario', kwargs={'pk': self.kwargs.get('pk')})
 
-        
+
+"APIS"
+
+#Diario
+class BuscarDiarioApiView(ListAPIView):
+    serializer_class=DiarioSerializer
+
+    def get_queryset(self):
+        kword=self.request.query_params.get('kword','')
+
+        return Diario.objects.filter(
+            id__icontains=kword
+        ).order_by('id')

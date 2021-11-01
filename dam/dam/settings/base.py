@@ -61,6 +61,7 @@ INSTALLED_APPS = [
 
     #apps de terceros
     'rest_framework',
+    'django_filters',
 
 ]
 

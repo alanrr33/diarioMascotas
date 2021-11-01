@@ -1,4 +1,6 @@
 #from django.forms.forms import Form
+
+from rest_framework.generics import ListAPIView
 from django.contrib import messages
 from django.views.generic import View,TemplateView
 from django.views.generic.edit import FormView
@@ -15,6 +17,7 @@ from .forms import (UserRegisterForm,
                     PanelUsuarioForm)
 from .models import User
 from .functions import generador_cod,generador_pass_temp
+from .serializers import DueñoSerializer
 
 
 
@@ -161,7 +164,24 @@ class PanelUsuarioView(LoginRequiredMixin,FormView):
 
         return super(PanelUsuarioView,self).form_valid(form)
 
+class FaqView(LoginRequiredMixin,TemplateView):
+    template_name="users/faq.html"
 
+
+
+
+"APIS"
+
+#Dueño
+class BuscarDueñoApiView(ListAPIView):
+    serializer_class=DueñoSerializer
+
+    def get_queryset(self):
+        kword=self.request.query_params.get('kword','')
+
+        return User.objects.filter(
+            nombre__icontains=kword
+        ).order_by('nombre')
 
 
 

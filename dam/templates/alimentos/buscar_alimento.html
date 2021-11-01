@@ -1,6 +1,7 @@
 
 {% extends 'base.html' %}
 {% load static %}
+{% load my_tags %}
 {% load i18n %}
 {% block navbar_secundaria %}
     {% if not diario %}
@@ -19,15 +20,17 @@
     {% endlanguage %}
     <p>
       <div id="app">
+      <!--
         <form method="GET" action="#">
             <input type="text" placeholder="Ingrese nombre o marca" name="busqueda" id="busqueda" v-model="kword"></input>
 
             <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
-     
+            
         <br>
       
-          <!--
+          
           <p>Selected alimentos: {$ lista_alimentos_agregados $}</p>
+          
           
           <div class="col-6" v-for="alimento in lista_resultados" :key="alimento.id">
             <input type="checkbox" :value="alimento" v-model="lista_alimentos_agregados" >
@@ -45,25 +48,24 @@
                       Calorias: {$ alimento.calorias $}
                     </input>
                     </td>
-                    <td class="text-center"><input type="number" name="cantidad" id="cantidad" min="1" oninput="this.value = 
+                    <td class="text-center"><input type="number"  name="cantidad" id="cantidad" min="1" oninput="this.value = 
                         !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-                    </td>
-                    <td class="text-center">de 
-                          <select name="medida" id="medida">
-                          <option selected value value=1>1 Gramo</option>
-                          <option value=100>100 Gramos</option>
-                          </select>
+                        
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            -->
+           
         </form>
+        -->
       </div>
     </p>
 
-
+  <form action="" method="get">
+    {{ filterset.form.as_p }}
+    <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
+  </form>
 
 
 <form method="POST" name="alimentosform">
@@ -110,8 +112,55 @@
     {% endfor %}
   </tbody>
 </table>
+<!--
+{% if is_paginated %}
+            <nav aria-label="123">
+                <ul class="pagination pagination-sm mt-3">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?{% param_replace page=1 %}">Primera</a></li>
+                    {% if page_obj.previous_page_number != 1 %}
+                <li class="page-item">
+                <a class="page-link" href="?{% param_replace page=page_obj.previous_page_number %}">Atras</a></li>
+                    {% endif %}
+                {% endif %}
+              
+             Pagina {{ page_obj.number }} de {{ paginator.num_pages }}
+
+            {% if page_obj.has_next %}
+                {% if page_obj.next_page_number != paginator.num_pages %}
+                <li class="page-item"><a class="page-link" href="?{% param_replace page=page_obj.next_page_number %}">Siguiente</a></li>
+                {% endif %}
+                <li class="page-item">
+                <a class="page-link" href="?{% param_replace page=paginator.num_pages %}">Ultima</a></li>
+            {% endif %}
+                </ul>
+            </nav>
+
+            <p>Resultados {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>
+{% endif %}
+-->
+{% if is_paginated %}
+  {% if page_obj.has_previous %}
+    <a href="?{% param_replace page=1 %}">Primera</a>
+    {% if page_obj.previous_page_number != 1 %}
+      <a href="?{% param_replace page=page_obj.previous_page_number %}">Anterior</a>
+    {% endif %}
+  {% endif %}
+
+  Pagina {{ page_obj.number }} de {{ paginator.num_pages }}
+
+  {% if page_obj.has_next %}
+    {% if page_obj.next_page_number != paginator.num_pages %}
+      <a href="?{% param_replace page=page_obj.next_page_number %}">Siguiente</a>
+    {% endif %}
+    <a href="?{% param_replace page=paginator.num_pages %}">Ultima</a>
+  {% endif %}
+
+  <p>Resultados {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>
+{% endif %}
 
 
+<!--
 {% if is_paginated %}
     <nav aria-label="123">
         <ul class="pagination pagination-sm">
@@ -137,6 +186,7 @@
         </ul>
     </nav>
 {% endif %}
+-->
 
 <button class="btn border-0" style="background-color: #70E000;" type="submit" >Agregar seleccionado</button>
 

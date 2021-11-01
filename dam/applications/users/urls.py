@@ -6,7 +6,9 @@ from .views import (
                     HomePage,
                     CodeVerificationView,
                     ReestablecerPassView,
-                    PanelUsuarioView
+                    PanelUsuarioView,
+                    BuscarDueñoApiView,
+                    FaqView
                     )
 
 app_name='users_app'
@@ -19,6 +21,9 @@ urlpatterns = [
     path('user-verificacion/<int:pk>/',CodeVerificationView.as_view(),name="userverificacion"),
     path('reestablecerpass/',ReestablecerPassView.as_view(),name="reestablecerpass"),
     path('panel-usuario/',PanelUsuarioView.as_view(),name="panelusuario"),
+    path('faq',FaqView.as_view(),name="preguntasfrecuentes"),
+    #api
+    path('api/dueño/buscar/',BuscarDueñoApiView.as_view(),name="buscardueño"),
     
 
 ]

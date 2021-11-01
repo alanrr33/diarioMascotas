@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import Alimento
+from .models import Alimento,AlimentoConsumido
+
 
 class AlimentoSerializer(serializers.ModelSerializer):
+    id=serializers.IntegerField()
+    nombre=serializers.CharField()
+    marca=serializers.CharField()
+    calorias=serializers.IntegerField()
 
     class Meta:
         model=Alimento
@@ -10,4 +15,18 @@ class AlimentoSerializer(serializers.ModelSerializer):
             'nombre',
             'marca',
             'calorias'
+        )
+
+class AlimentoConsumidoSerializer(serializers.ModelSerializer):
+
+    #alimento=AlimentoSerializer()
+    
+    class Meta:
+        model=AlimentoConsumido
+        fields=(
+            'id',
+            'alimento',
+            'diario',
+            'cantidad',
+            'total_cal'
         )

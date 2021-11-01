@@ -96,6 +96,7 @@ class Nota(models.Model):
     fecha=models.DateField(auto_now_add=False)
     importancia=models.CharField(max_length=8,choices=IMPORTANCIA_CHOICES,blank=False)
     texto=models.CharField(max_length=200,blank=False,default="Nota")
+    archivado=models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)+' '+self.mascota.nombre

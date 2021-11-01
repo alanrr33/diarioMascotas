@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from .models import User
 from .functions import hay_numeros
 
@@ -18,9 +20,9 @@ class UserRegisterForm(forms.ModelForm):
         label='Nombre',
         max_length=30,
         required=True,
-        help_text='Ingrese su nombre o nombres',
+        help_text='Ingrese su nombre',
         widget=forms.TextInput(
-
+        
         attrs={
             'placeholder':'Luis Alberto',
         }
@@ -31,7 +33,7 @@ class UserRegisterForm(forms.ModelForm):
         label='Apellido',
         max_length=30,
         required=True,
-        help_text='Ingrese su apellido o apellidos',
+        help_text='Ingrese su apellido',
         widget=forms.TextInput(
 
         attrs={
@@ -106,17 +108,29 @@ class UserRegisterForm(forms.ModelForm):
             'genero',
         )
 
+
+    def clean_email(self):
+            email = self.cleaned_data.get('email')
+            email_valido=User.objects.email_unico(email)
+
+            if not email.endswith('.com'):
+                raise forms.ValidationError("solo emails terminados en .com estan permitidos")
+
+            if email_valido==False:
+                raise forms.ValidationError("El email ya se encuentra en uso")
+
+            return email
+
     #al hacer validacion de varios campos debemos sobreescribir el metodo clean
     def clean(self):
         cleaned_data=super(UserRegisterForm, self).clean()
 
         password1=self.cleaned_data['password1']
         password2=self.cleaned_data['password2']
-        email=self.cleaned_data['email']
         username=self.cleaned_data['username']
         nombre=self.cleaned_data['nombre']
         apellido=self.cleaned_data['apellido']
-        email_valido=User.objects.email_unico(email)
+        
 
         if nombre:
             x=hay_numeros(nombre)
@@ -133,10 +147,6 @@ class UserRegisterForm(forms.ModelForm):
                 pass
             
 
-        if email_valido==False:
-            self.add_error('email',"El email ya se encuentra en uso")
-
-        
         if password1 and password2:
             if password1 != password2:
                 self.add_error('password2','Las contraseñas no coinciden')
@@ -146,11 +156,6 @@ class UserRegisterForm(forms.ModelForm):
         
         if (len(password2)<5):
             self.add_error('password2','La contraseña debe tener más de 5 caracteres')
-        
-
-        
-        #print(username)
-        #print(nombre)
 
         if username and nombre:
             if username==nombre:

@@ -1,5 +1,6 @@
 from django import forms
-from django.forms.widgets import NumberInput
+from django.forms.fields import ChoiceField
+from django.forms.widgets import CheckboxInput, NumberInput, Select, TextInput
 
 from .models import Mascota,Nota
 
@@ -19,22 +20,41 @@ class MascotaRegisterForm(forms.ModelForm):
             'objetivo',
             'imagen'
         )
+
+        
+        widgets={
+            'nombre':TextInput(attrs={'title':"Ingrese el nombre de la mascota"}),
+            'tipo':Select(attrs={'title':'Seleccione el tipo de mascota'}),
+            'edad':NumberInput(attrs={'title':'Edad en meses'}),
+            'peso':NumberInput(attrs={'title':'Peso en kg'}),
+            'actividad':Select(attrs={'title':'Seleccione cuanta actividad realiza'}),
+            'tamaño':Select(attrs={'title':'Seleccione el tamaño de la mascota'}),
+            'objetivo':Select(attrs={'title':'Seleccione el objetivo que desea alcanzar'}),
+            'esterilizado':CheckboxInput(attrs={'title':'Tildado = si'})
+
+        }
+
+    def clean_peso(self):
+            peso = self.cleaned_data.get('peso')
+            
+            if peso<=0:
+                raise forms.ValidationError('Por favor ponga un peso distinto o mayor a 0')
+
+
+            return peso
+
+    def clean_edad(self):
+            edad = self.cleaned_data.get('edad')
+            
+            if edad<=0:
+                raise forms.ValidationError('Por favor ingrese una edad mayor a 0 meses')    
+
+
+            return edad
+
     
     def clean(self):
-        cleaned_data=super(MascotaRegisterForm, self).clean()
-
-        #prevengo que ingresen un peso negativo
-        peso=self.cleaned_data['peso']
-        #si existe peso
-        if peso:
-            #si peso es = 0
-            if peso==0:
-                self.add_error('peso','Por favor ponga un peso valido')
-            #si peso es menor a 0
-            if peso<0:
-                self.add_error('peso','por favor introduzca un numero positivo')
-
-                
+        cleaned_data=super(MascotaRegisterForm, self).clean()     
                     
         return cleaned_data
 
@@ -50,7 +70,8 @@ class MascotaUpdateForm(forms.ModelForm):
             'actividad',
             'tamaño',
             'esterilizado',
-            'objetivo'
+            'objetivo',
+            'imagen',
         )
 
     def __init__(self, *args, **kwargs):
@@ -70,27 +91,32 @@ class MascotaUpdateForm(forms.ModelForm):
         self.fields['tamaño'].initial=mascota.tamaño
         self.fields['esterilizado'].initial=mascota.esterilizado
         self.fields['objetivo'].initial=mascota.objetivo
+
+
+    def clean_peso(self):
+            peso = self.cleaned_data.get('peso')
+            
+            if peso<=0:
+                raise forms.ValidationError('Por favor ponga un peso distinto o mayor a 0')
+
+
+            return peso
+
+    def clean_edad(self):
+            edad = self.cleaned_data.get('edad')
+            
+            if edad<=0:
+                raise forms.ValidationError('Por favor ingrese una edad mayor a 0 meses')    
+
+
+            return edad
+
+
     
     def clean(self):
         
         cleaned_data=super(MascotaUpdateForm, self).clean()
-        
-        #pongo la info traida de los campos en variables
-        edad=self.cleaned_data['edad']
-        peso=self.cleaned_data['peso']
-
-
-        #prevengo que ingresen un numero negativo en los campos
-    
-        if peso<=0:
-            self.add_error('peso','Por favor introduzca un numero positivo')
-        
-        if edad<=0:
-            self.add_error('edad','Por favor introduzca un numero positivo')
-                
-                
-                
-                    
+            
         return cleaned_data
     
 class AgregarNotaForm(forms.ModelForm):

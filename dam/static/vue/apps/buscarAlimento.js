@@ -43,7 +43,7 @@ new Vue({
         },
 
         agregarAlimento:function(){
-            ///this.lista_alimentos_agregados.push(alimento)
+            this.lista_alimentos_agregados.push(alimento)
             console.log(this.lista_alimentos_agregados)
         }
 

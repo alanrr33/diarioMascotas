@@ -7,7 +7,9 @@ from .views import (MascotaRegisterView,
                     ReportesMascotaView,
                     AgregarNotaView,
                     PerfilMascotaView,
-                    listresults)
+                    listresults,
+                    borrarnota,
+                    BuscarMascotaApiView)
 
 app_name="mascotas_urls"
 
@@ -21,5 +23,8 @@ urlpatterns = [
     path('notas-mascotas/<int:pk>/',AgregarNotaView.as_view(),name="notas"),
     path('perfil-mascota/<int:pk>/',PerfilMascotaView.as_view(),name="perfil"),
     path('descargar/<int:pk>/',listresults,name="descargar"),
+    path('borrar-nota/<int:pk>/',borrarnota,name="borrarnota"),
+    #api
+    path('api/mascota/buscar/',BuscarMascotaApiView.as_view(),name="buscarmascota"),
 
 ]

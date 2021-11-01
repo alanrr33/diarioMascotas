@@ -19,7 +19,8 @@ from applications.diario.models import Diario
 from .functions import (cal_x_gramo,
                         total_cal,
                         limpiar_lista)
-from .serializers import AlimentoSerializer
+from .serializers import AlimentoSerializer,AlimentoConsumidoSerializer
+from .filters import AlimentoFilter
 
 
 
@@ -28,6 +29,7 @@ from .serializers import AlimentoSerializer
 class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
     form_class=DiarioForm
     template_name="alimentos/buscar_alimento.html"
+    filterset_class=AlimentoFilter
     #volver a detalle diario
     success_url=reverse_lazy('diario_urls:detallediario')
 
@@ -39,21 +41,33 @@ class BuscarAlimentos(LoginRequiredMixin,FormView,ListView):
 
     
     def get_queryset(self):
-        busqueda=self.request.GET.get('busqueda')
+        #busqueda=self.request.GET.get('busqueda')
         diario_pk=self.kwargs['pk']
         diario=Diario.objects.get(pk=diario_pk)
         tipomascota=diario.mascota.tipo
         print('tipo mascota = %s' %tipomascota)
+        query=Alimento.objects.all().filter(tipo_mascota=tipomascota)
 
-        if not busqueda:
+
+        """if not busqueda:
             busqueda=""
         resultado=Alimento.objects.buscar_alimentos(busqueda).filter(tipo_mascota=tipomascota)
-        return resultado
+        return resultado"""
+
+        # Then use the query parameters and the queryset to
+        # instantiate a filterset and save it as an attribute
+        # on the view instance for later.
+        self.filterset = self.filterset_class(self.request.GET, queryset=query)
+        # Return the filtered queryset
+        return self.filterset.qs.distinct()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         diario_pk=self.kwargs['pk']
         context["diario"]=Diario.objects.get(pk=diario_pk)
+
+        # Pass the filterset to the template - it provides the form.
+        context['filterset'] = self.filterset
         return context
 
     def form_valid(self, form):
@@ -235,7 +249,7 @@ class EditarAlimento(LoginRequiredMixin,FormView):
         return context"""
     #que hacía esto? solo un hechicero podría saberlo
     
-    #sobreescribimos el metodo para obtener los kwargs para poder pasar la id al modelform
+    #sobreescribimos el metodo para obtener los kwargs del form para poder pasar la id al modelform
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['pk'] = self.kwargs['pk']
@@ -249,6 +263,7 @@ class EditarAlimento(LoginRequiredMixin,FormView):
 
 "APIS"
 
+#Alimento
 class BuscarAlimentoListApiView(ListAPIView):
     serializer_class=AlimentoSerializer
 
@@ -258,4 +273,16 @@ class BuscarAlimentoListApiView(ListAPIView):
         return Alimento.objects.filter(
             nombre__icontains=kword
         ).order_by('nombre')
+
+#ALimento Consumido
+
+class AlimentoConsumidoListApiView(ListAPIView):
+    serializer_class=AlimentoConsumidoSerializer
+
+    def get_queryset(self):
+        kword=self.request.query_params.get('kword','')
+
+        return AlimentoConsumido.objects.filter(
+            id__icontains=kword
+        ).order_by('id')
     

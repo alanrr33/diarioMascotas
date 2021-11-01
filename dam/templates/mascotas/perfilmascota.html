@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
+{% load my_tags %}
 {% load static %}
 {% block title %}Perfil mascotas{% endblock title %}
-{% block navbar_secundaria %}
-{% include 'includes/navbarmascotas.html' %}
-{% endblock navbar_secundaria %}
 
 {% block content %}
 
@@ -66,15 +64,13 @@
   <div class="profile-nav col-md-3">
       <div class="panel">
           <div class="user-heading round">
-              <a href="#">
+              <a href="{{ mascota.imagen.url }}">
                   <!--<img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">-->
                   {% if mascota.imagen  %}
                   <img src="{{ mascota.imagen.url }}" alt="123">
                     {% else %}
                   <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
                   {% endif %}
-
-
               </a>
               <h1>{{ mascota.nombre }}</h1>
               <p>{{ mascota.tipo }}</p>
@@ -113,9 +109,6 @@
                   <div class="bio-row">
                       <p><span>Nombre</span>: {{ mascota.nombre }}</p>
                   </div>
-                  <!--<div class="bio-row">
-                      <p><span>Tipo</span>: Perro</p>
-                  </div>-->
                   <div class="bio-row">
                       <p><span>Tamaño </span>: {{ mascota.tamaño }}</p>
                   </div>
@@ -141,6 +134,12 @@
               </div>
           </div>
       </div>
+  <p class="h4 mb-3"><strong>Notas</strong></p>
+  <p class="h6">Ingrese la fecha de inicio y la fecha de fin</p>
+  <form action="" method="get">
+    {{ filterset.form.as_p }}
+    <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
+  </form>
 
 
 <div id="accordion">
@@ -148,27 +147,33 @@
 
 
     {% if notas %}
+  
     Aqui estan sus notas:
-        {% for nota in notas  %}
+    <br>
+    
+
+
+
+        {% for object in object_list  %}
         
-            <div class="card ">
+            <div class="card mt-3 mb-4 ">
                 <!--para cambiarle los colores a las cabeceras de las notas -->
 
-                    {% if nota.importancia == "Normal" %}
+                    {% if object.importancia == "Normal" %}
                         <div class="card-header p-3 mb-2 bg-primary " id="headingOne">
-                    {% elif nota.importancia == "Moderada" %}
+                    {% elif object.importancia == "Moderada" %}
                         <div class="card-header p-3 mb-2 bg-warning text-dark" id="headingOne">
-                    {% elif nota.importancia == "Alta" %}
+                    {% elif object.importancia == "Alta" %}
                         <div class="card-header p-3 mb-2 bg-danger text-dark" id="headingOne">
                     
                 {% endif %} 
                 <h5 class="mb-0">
                     <button class="btn" data-toggle="collapse" data-target="#collapse{{forloop.counter}}" 
                     aria-expanded="true" aria-controls="collapseOne">
-                    {{ nota.fecha }} <a title="Borrar" href="#">
+                    {{ object.fecha }} <a title="Borrar" href="{% url 'mascotas_urls:borrarnota' object.id  %}">
                    
                     </button>
-                     <img src="{% static 'iconos/cesto.svg' %}" width="18" height="18">
+                     <img src="{% static 'iconos/cesto.svg' %}" title="Archivar" width="18" height="18">
                     </a>
                 </h5>
                 </div>
@@ -176,12 +181,12 @@
                 <div id="collapse{{forloop.counter}}" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
 
-                        {% if nota.importancia == "Normal" %}
-                            <p class="text-primary">{{ nota.texto }}</p>
-                        {% elif nota.importancia == "Moderada" %}
-                            <p class="text-warning">{{ nota.texto }}</p>
-                        {% elif nota.importancia == "Alta" %}
-                            <p class="text-danger">{{ nota.texto }}</p>
+                        {% if object.importancia == "Normal" %}
+                            <p class="text-primary">{{ object.texto }}</p>
+                        {% elif object.importancia == "Moderada" %}
+                            <p class="text-warning">{{ object.texto }}</p>
+                        {% elif object.importancia == "Alta" %}
+                            <p class="text-danger">{{ object.texto }}</p>
                         {% endif %} 
 
                         
@@ -190,6 +195,34 @@
             </div>
         
         {% endfor %}
+
+        {% if is_paginated %}
+            <nav aria-label="123">
+                <ul class="pagination pagination-sm mt-3">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?{% param_replace page=1 %}">Primera</a></li>
+                    {% if page_obj.previous_page_number != 1 %}
+                <li class="page-item">
+                <a class="page-link" href="?{% param_replace page=page_obj.previous_page_number %}">Atras</a></li>
+                    {% endif %}
+                {% endif %}
+
+            
+
+            {% if page_obj.has_next %}
+                {% if page_obj.next_page_number != paginator.num_pages %}
+                <li class="page-item"><a class="page-link" href="?{% param_replace page=page_obj.next_page_number %}">Siguiente</a></li>
+                {% endif %}
+                <li class="page-item">
+                <a class="page-link" href="?{% param_replace page=paginator.num_pages %}">Ultima</a></li>
+            {% endif %}
+
+            <!--<p>Objects {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>-->
+                </ul>
+            </nav>
+        {% endif %}
+
+
     {% else %}
     No hay notas
 
@@ -202,11 +235,6 @@
   </div>
 </div>
 </div>
-
-
-
-
-
 
 
 {% endblock content %}
