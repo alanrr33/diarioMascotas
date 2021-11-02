@@ -7,6 +7,137 @@ from .models import Mascota,Nota
 
 class MascotaRegisterForm(forms.ModelForm):
 
+    TIPO_CHOICES=(
+        ('Gato','Gato'),
+        ('Perro','Perro'),
+    )
+
+    ACTIVIDAD_CHOICES=(
+        ('Poca','Poca'),
+        ('Normal','Normal'),
+        ('Moderada','Moderada'),
+        ('Intensa','Intensa'),
+    )
+
+    TAMAÑO_CHOICES=(
+        ('Muy pequeño','Muy pequeño'),
+        ('Pequeño','Pequeño'),
+        ('Mediano','Mediano'),
+        ('Grande','Grande'),
+        ('Gigante','Gigante'),
+    )
+
+    OBJETIVO_CHOICES=(
+        ('Bajar peso','Bajar peso'),
+        ('Mantener peso','Mantener peso'),
+        ('Aumentar peso','Aumentar peso'),
+    )
+
+    nombre=forms.CharField(
+         
+        label='Nombre',
+        max_length=30,
+        required=True,
+        help_text='Ingrese nombre de la mascota',
+        widget=forms.TextInput(
+        
+        attrs={
+            'placeholder':'Perrinho',
+            'title':'Ingrese el nombre de su mascota',
+        }
+    ))
+
+    tipo=forms.ChoiceField(
+        choices=TIPO_CHOICES, 
+        label='Tipo de mascota',
+        required=True,
+        widget=forms.Select(
+
+        attrs={
+            
+        }
+    ))
+
+    edad=forms.CharField(
+         
+        label='Edad',
+        required=True,
+        help_text='Ingrese la edad de su mascota',
+        widget=forms.NumberInput(
+
+        attrs={
+            'placeholder':'25',
+            'min':'0',
+            'max':'300',
+            'step':'1',
+            'title':'Ingrese la edad de la mascota'
+        }
+    ))
+
+    peso=forms.CharField(
+         
+        label='Peso',
+        required=True,
+        help_text='Ingrese el peso de su mascota',
+        widget=forms.NumberInput(
+
+        attrs={
+            'placeholder':'25',
+            'min':'0',
+            'max':'400',
+            'step':'0.1',
+            'title':'Ingrese el peso en kg de su mascota',
+        }
+    ))
+
+    actividad=forms.ChoiceField(
+        choices=ACTIVIDAD_CHOICES, 
+        label='Actividad',
+        required=True,
+        widget=forms.Select(
+
+        attrs={
+            
+        }
+    ))
+
+    tamaño=forms.ChoiceField(
+        choices=TAMAÑO_CHOICES, 
+        label='Tamaño',
+        required=True,
+        widget=forms.Select(
+
+        attrs={
+            
+        }
+    ))
+
+    objetivo=forms.ChoiceField(
+        choices=OBJETIVO_CHOICES, 
+        label='Objetivo',
+        required=True,
+        widget=forms.Select(
+
+        attrs={
+            
+        }
+    ))
+
+    esterilizado=forms.BooleanField(
+        label='Esterilizado',
+        required=True,
+        widget=forms.CheckboxInput(
+            attrs={
+                'title':'Tildado = si'
+            }
+        )
+    )
+
+    imagen=forms.FileField(
+        required=True,
+        label="Imagen de la mascota",
+    )
+
     class Meta:
         model=Mascota
         fields=(
@@ -16,45 +147,24 @@ class MascotaRegisterForm(forms.ModelForm):
             'peso',
             'actividad',
             'tamaño',
-            'esterilizado',
             'objetivo',
+            'esterilizado',
             'imagen'
         )
-
-        
-        widgets={
-            'nombre':TextInput(attrs={'title':"Ingrese el nombre de la mascota"}),
-            'tipo':Select(attrs={'title':'Seleccione el tipo de mascota'}),
-            'edad':NumberInput(attrs={'title':'Edad en meses'}),
-            'peso':NumberInput(attrs={'title':'Peso en kg'}),
-            'actividad':Select(attrs={'title':'Seleccione cuanta actividad realiza'}),
-            'tamaño':Select(attrs={'title':'Seleccione el tamaño de la mascota'}),
-            'objetivo':Select(attrs={'title':'Seleccione el objetivo que desea alcanzar'}),
-            'esterilizado':CheckboxInput(attrs={'title':'Tildado = si'})
-
-        }
-
-    def clean_peso(self):
-            peso = self.cleaned_data.get('peso')
-            
-            if peso<=0:
-                raise forms.ValidationError('Por favor ponga un peso distinto o mayor a 0')
-
-
-            return peso
-
-    def clean_edad(self):
-            edad = self.cleaned_data.get('edad')
-            
-            if edad<=0:
-                raise forms.ValidationError('Por favor ingrese una edad mayor a 0 meses')    
-
-
-            return edad
+ 
 
     
     def clean(self):
-        cleaned_data=super(MascotaRegisterForm, self).clean()     
+        cleaned_data=super(MascotaRegisterForm, self).clean() 
+        peso = self.cleaned_data.get('peso')    
+        edad = self.cleaned_data.get('edad')
+
+            
+        if peso<=0:
+            self.add_error('peso','Por favor ponga un peso distinto o mayor a 0')
+        if edad<=0:
+            self.add_error('edad','Por favor ingrese una edad mayor o igual a 0 meses')  
+
                     
         return cleaned_data
 
@@ -93,29 +203,20 @@ class MascotaUpdateForm(forms.ModelForm):
         self.fields['objetivo'].initial=mascota.objetivo
 
 
-    def clean_peso(self):
-            peso = self.cleaned_data.get('peso')
-            
-            if peso<=0:
-                raise forms.ValidationError('Por favor ponga un peso distinto o mayor a 0')
-
-
-            return peso
-
-    def clean_edad(self):
-            edad = self.cleaned_data.get('edad')
-            
-            if edad<=0:
-                raise forms.ValidationError('Por favor ingrese una edad mayor a 0 meses')    
-
-
-            return edad
-
-
-    
     def clean(self):
         
         cleaned_data=super(MascotaUpdateForm, self).clean()
+
+        peso = self.cleaned_data.get('peso')    
+        edad = self.cleaned_data.get('edad')
+
+            
+        if peso<=0:
+            self.add_error('peso','Por favor ponga un peso distinto o mayor a 0')
+        if edad<=0:
+            self.add_error('edad','Por favor ingrese una edad mayor o igual a 0 meses')  
+
+                    
             
         return cleaned_data
     

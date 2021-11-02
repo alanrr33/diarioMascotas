@@ -29,11 +29,5 @@ class UserManager(BaseUserManager, models.Manager):
         else:
             return False
     
-    def email_unico(self,email):
-        if self.filter(email=email).exists():
-            return False
-        else:
-            return True
-    
     
     

@@ -7,11 +7,11 @@ from .functions import hay_numeros
 
 class UserRegisterForm(forms.ModelForm):
 
-    """GENDER_CHOICES=(
+    GENDER_CHOICES=(
         ('M','Masculino'),
         ('F','Femenino'),
         ('O','Otro'),
-    )"""
+    )
 
 
 
@@ -41,7 +41,7 @@ class UserRegisterForm(forms.ModelForm):
         }
     ))
 
-    """genero=forms.ChoiceField(
+    genero=forms.ChoiceField(
         choices=GENDER_CHOICES, 
         label='Genero',
         required=True,
@@ -50,7 +50,7 @@ class UserRegisterForm(forms.ModelForm):
         attrs={
             
         }
-    ))"""
+    ))
 
     email=forms.EmailField(
          
@@ -101,61 +101,67 @@ class UserRegisterForm(forms.ModelForm):
     ))
 
 
+
     class Meta:
         model=User
 
         fields=(
+            'nombre',
+            'apellido',
             'genero',
+            'email',
+            'username',
+            
         )
 
 
-    def clean_email(self):
-            email = self.cleaned_data.get('email')
-            email_valido=User.objects.email_unico(email)
+        
 
-            if not email.endswith('.com'):
-                raise forms.ValidationError("solo emails terminados en .com estan permitidos")
-
-            if email_valido==False:
-                raise forms.ValidationError("El email ya se encuentra en uso")
-
-            return email
 
     #al hacer validacion de varios campos debemos sobreescribir el metodo clean
     def clean(self):
         cleaned_data=super(UserRegisterForm, self).clean()
-
+        email = self.cleaned_data.get('email')
         password1=self.cleaned_data['password1']
         password2=self.cleaned_data['password2']
         username=self.cleaned_data['username']
         nombre=self.cleaned_data['nombre']
         apellido=self.cleaned_data['apellido']
+
+        if email:
+            if not email.endswith('.com'):
+                self.add_error('email',"Solo emails terminados en .com estan permitidos")
+            if User.objects.filter(email=email).exists():
+                self.add_error('email',"El email ya se encuentra en uso")
+
+
         
 
         if nombre:
             x=hay_numeros(nombre)
             if x==True:
                 self.add_error('nombre','Hay numeros en el nombre')
-            else:
-                pass
+            
         
         if apellido:
             x=hay_numeros(apellido)
             if x==True:
                 self.add_error('apellido','Hay numeros en el apellido')
-            else:
-                pass
-            
+        
+        if password1:
+            if (len(password1)<6):
+                self.add_error('password1','La contraseña debe tener al menos 6 caracteres')
+            if not any (c.isupper() for c in password1):
+                self.add_error('password1','La contraseña debe contener al menos 1 caracter en mayuscula')
+            if not any(c.islower() for c in password1):
+                self.add_error('password1','La contraseña debe tener al menos 1 caracter en miniscula')
+            if not any (c.isdigit() for c in password1):
+                self.add_error('password1','La contraseña debe tener al menos un caracter numerico')
 
         if password1 and password2:
             if password1 != password2:
                 self.add_error('password2','Las contraseñas no coinciden')
-
-        if (len(password1)<5):
-            self.add_error('password1','La contraseña debe tener más de 5 caracteres')
-        
-        if (len(password2)<5):
-            self.add_error('password2','La contraseña debe tener más de 5 caracteres')
+            
 
         if username and nombre:
             if username==nombre:
@@ -233,11 +239,10 @@ class ReestablecerPassForm(forms.Form):
         cleaned_data=super(ReestablecerPassForm, self).clean()
 
         email=self.cleaned_data['email']
-        existeemail=User.objects.email_unico(email)
-        if  (existeemail==False):
+        if User.objects.filter(email=email).exists():
             print('miau')
         else:
-            raise forms.ValidationError('No hay ningun usuario registrado con este email')
+           self.add_error('email','No hay ningun usuario registrado con este email')
 
         return cleaned_data
 
@@ -278,15 +283,19 @@ class PanelUsuarioForm(forms.Form):
         password1=self.cleaned_data['password1']
         password2=self.cleaned_data['password2']
 
+        if password1:
+            if (len(password1)<6):
+                self.add_error('password1','La contraseña debe tener al menos 6 caracteres')
+            if not any (c.isupper() for c in password1):
+                self.add_error('password1','La contraseña debe contener al menos 1 caracter en mayuscula')
+            if not any(c.islower() for c in password1):
+                self.add_error('password1','La contraseña debe tener al menos 1 caracter en miniscula')
+            if not any (c.isdigit() for c in password1):
+                self.add_error('password1','La contraseña debe tener al menos un caracter numerico')
+
         if password1 and password2:
             if password1 != password2:
                 self.add_error('password2','Las contraseñas no coinciden')
-
-        if (len(password1)<5):
-            self.add_error('password1','La contraseña debe tener más de 5 caracteres')
-        
-        if (len(password2)<5):
-            self.add_error('password2','La contraseña debe tener más de 5 caracteres')
         
 
 
