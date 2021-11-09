@@ -153,14 +153,13 @@ class PanelUsuarioView(LoginRequiredMixin,FormView):
     form_class=PanelUsuarioForm
     success_url=reverse_lazy('users_app:loginuser')
 
-
     def form_valid(self, form):
 
-        print(form.cleaned_data['password1'])
-        print(form.cleaned_data['password2'])
-
-
-
+        #actualizamos la contraseña
+        user=self.request.user
+        contra=form.cleaned_data['password1']
+        user.set_password(contra)
+        user.save()
 
         return super(PanelUsuarioView,self).form_valid(form)
 

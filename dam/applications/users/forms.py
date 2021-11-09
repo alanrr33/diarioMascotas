@@ -248,7 +248,7 @@ class ReestablecerPassForm(forms.Form):
 
 class PanelUsuarioForm(forms.Form):
     password1=forms.CharField(
-        min_length=5,
+        min_length=6,
         label='Contraseña', 
         required=True,
         help_text='Ingrese una contraseña nueva',
@@ -259,7 +259,7 @@ class PanelUsuarioForm(forms.Form):
     ))
 
     password2=forms.CharField(
-        min_length=5,
+        min_length=6,
         label='Contraseña', 
         required=True, 
         help_text='Repita la contraseña nueva',
