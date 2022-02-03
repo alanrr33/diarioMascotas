@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block title %}Recuperar contraseña{% endblock title %}
 
-    {% block content %}
+{% block content %}
 
     <div class="container-fluid mt-3">
         <p class="h4 text-center">Ingrese email<p>
@@ -16,7 +16,9 @@
                 </div>
             </div>
     </div>
-{% block footerclass %}
-<footer class="bg-dark text-center text-white fixed-bottom mt-auto" style="background-color: #70E000 ">
-{% endblock %}
+
+    {% block footerclass %}
+    <footer class="tm-footer row -small fixed-bottom mt-auto" >
+    {% endblock %}
+
 {% endblock content %}

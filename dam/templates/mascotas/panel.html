@@ -5,10 +5,14 @@
 {% block content %}
     <p class="h1">Panel de {{ mascota.nombre }}</p>
     <br>
+    
     <div class="list-group">
         <a href="{% url 'mascotas_urls:editar' pk=mascota.id %}" class="list-group-item list-group-item-action">Editar</a>
         <a href="{% url 'mascotas_urls:delete' pk=mascota.id %}" class="list-group-item list-group-item-action">Borrar</a>
-        <!--<a href="#" class="list-group-item list-group-item-action"></a>-->
     </div>
 
+
+{% block footerclass %}
+  <footer class="tm-footer row -small fixed-bottom mt-auto" >
+{% endblock %}
 {% endblock content %}

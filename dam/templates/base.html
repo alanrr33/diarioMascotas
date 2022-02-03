@@ -5,6 +5,8 @@
 <!doctype html>
 <html lang="en">
 
+
+
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -12,8 +14,10 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  
-  <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700"/>
+ 
 
 
   <title>{% block title %}{% endblock title %}</title>
@@ -25,8 +29,8 @@
 
 </head>
 
-<body class="d-flex flex-column min-vh-100" style="background-color: #fafafa ">
-
+<!-- <body class="d-flex flex-column min-vh-100" style="background-color: #fafafa "> -->
+<body>
 <!-- nav bar -->
 {% block navbarprincipal %}
 {% include 'includes/navbarprincipal.html' %}
@@ -47,7 +51,6 @@
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     
 
-
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -58,55 +61,41 @@
 
 {% block footer %}
 <!-- Footer --> 
-
-{% block footerclass %}<footer class="bg-dark text-center text-white  mt-auto" style="background-color: #70E000 ">{% endblock  %}
-  <!-- Grid container -->
-  <div class="container p-4">
+{% block footerclass %}<footer class="tm-footer mt-auto " >{% endblock  %}
+  <div class="col-12 font-weight-light">
+    <div class="container p-4">
   
-    <!-- media -->
-    <section class="mb-2">
-      <!-- Facebook -->
-      <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/" role="button"> 
-      <i class={% bs_icon 'facebook' %}
-      </i>
-      </a>
-
-      <!-- Linkedin -->
-      <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/alan-mauro-ramirez-rocha-4660391b1/" role="button">
-        <i class= {% bs_icon 'linkedin' %} 
-      </i>
-      </a>
-
-      <!-- github -->
-      <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/alanrr33" role="button">
-        <i class={% bs_icon 'github' %} 
+      <!-- media -->
+      <section class="mb-2">
+        <!-- Facebook -->
+        <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/" role="button"> 
+        <i class={% bs_icon 'facebook' %}
         </i>
-      </a>
-
-    </section>
-    <!-- media -->
-
-
-    <!-- texto 
-    <section class="mb-2">
-      <p>
-      </p>
-    </section>
-     /texto -->
-
-
+        </a>
+  
+        <!-- Linkedin -->
+        <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/alan-mauro-ramirez-rocha-4660391b1/" role="button">
+          <i class= {% bs_icon 'linkedin' %} 
+        </i>
+        </a>
+  
+        <!-- github -->
+        <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/alanrr33" role="button">
+          <i class={% bs_icon 'github' %} 
+          </i>
+        </a>
+  
+      </section>
+    </div>
+    <!-- Grid container -->
+  
+    <!-- Copyright -->
+    <div class="text-center p-3 " style="background-color: rgba(0, 0, 0, 0.2);">
+      © 2021 Copyright:
+      <a class="text-white" href="https://github.com/alanrr33">Alan Mauro Ramirez Rocha</a>
+    </div>
   </div>
-  <!-- Grid container -->
-
-  <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-    © 2021 Copyright:
-    <a class="text-white" href="https://github.com/alanrr33">Alan Mauro Ramirez Rocha</a>
-  </div>
-  <!-- Copyright -->
 </footer>
-
-<!-- Footer -->
 
 {% endblock footer %}
 

@@ -1,15 +1,7 @@
-
 {% extends 'base.html' %}
 {% load static %}
 {% load my_tags %}
 {% load i18n %}
-{% block navbar_secundaria %}
-    {% if not diario %}
-    {% include 'includes/navbarmascotas.html' %}
-    {% else %}
-    {% include 'includes/navbarbarmascdiarios.html' %}
-    {% endif %}
-{% endblock navbar_secundaria %}
 
 {% block title %}Agregar alimento{% endblock title %}
 
@@ -18,177 +10,95 @@
     {% language 'es' %}
     <p class="h5">Agregar alimentos al diario del {{ diario.fecha }}</p>
     {% endlanguage %}
-    <p>
-      <div id="app">
-      <!--
-        <form method="GET" action="#">
-            <input type="text" placeholder="Ingrese nombre o marca" name="busqueda" id="busqueda" v-model="kword"></input>
 
-            <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
-            
-        <br>
-      
-          
-          <p>Selected alimentos: {$ lista_alimentos_agregados $}</p>
-          
-          
-          <div class="col-6" v-for="alimento in lista_resultados" :key="alimento.id">
-            <input type="checkbox" :value="alimento" v-model="lista_alimentos_agregados" >
-            <span class="custom-control-description">{$ alimento.nombre $} {$ alimento.calorias $}</span>
-          </div>
-          
-            <div v-for="alimento in lista_resultados" :key="alimento.id">
-              <table class="table table-borderless  ">
-                <tbody>
-                  <tr class="table table-bordered" style="background-color: #f6f6f6;">
-                    <td class="col-5"> 
-                    <input type="checkbox" :value="alimento" v-model="lista_alimentos_agregados" >   
-                      {$ alimento.nombre $}, 
-                      {$ alimento.marca $},
-                      Calorias: {$ alimento.calorias $}
-                    </input>
-                    </td>
-                    <td class="text-center"><input type="number"  name="cantidad" id="cantidad" min="1" oninput="this.value = 
-                        !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-                        
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-           
-        </form>
-        -->
-      </div>
-    </p>
 
   <form action="" method="get">
     {{ filterset.form.as_p }}
-    <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
+    <button class="btn-sm btn-primary  text-uppercase mt-5"  type="submit">Buscar</button>
   </form>
-
+  <br>
 
 <form method="POST" name="alimentosform">
     {% csrf_token %}
 
+<!--table prueba-->
 
-<table class="table table-borderless  ">
-  <thead >
-    <tr class="table table-borderless ">
-      <th></th>
-      <th> Cantidad (gramos) </th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for alimento in alimentos %}
-    <tr class="table table-bordered" style="background-color: #f6f6f6;">
-      <td > 
-      <div title="Calorias = {{ alimento.calorias }} x Kg">
-      <input title='Marque para agregar' type="checkbox" class="checkbox-{{ forloop.counter }}" 
-      name="cb_alimento" id="cb_alimento-{{ forloop.counter }}" 
-      value="{{ alimento.id }}" /> 
-        
-        {{ alimento.nombre }}, 
-        {{ alimento.marca }}
-        <p style="font-size:14px;">{{ alimento.descripcion }}</p> 
-        </div>
-
-      </input>
-     
-      </td>
-      <td>
-          <input title='Ingrese la cantidad en gramos' 
-            type="number"
-            placeholder="Cantidad" 
-            name="cantidad" 
-            id="cantidad" 
-            min="1" 
-            oninput="this.value = 
-          !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-           
-      </td>
-
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<!--
-{% if is_paginated %}
-            <nav aria-label="123">
-                <ul class="pagination pagination-sm mt-3">
-                {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?{% param_replace page=1 %}">Primera</a></li>
-                    {% if page_obj.previous_page_number != 1 %}
-                <li class="page-item">
-                <a class="page-link" href="?{% param_replace page=page_obj.previous_page_number %}">Atras</a></li>
-                    {% endif %}
-                {% endif %}
+<div class="col-sm-12 col-md-12 col-lg-8 col-xl-12 tm-block-col">
+  <div class="tm-bg-primary-dark tm-block tm-block-products">
+    <div class="tm-product-table-container">
+      <table class="table table-hover tm-table-small tm-product-table mb-2">
+        <thead>
+          <tr>
               
-             Pagina {{ page_obj.number }} de {{ paginator.num_pages }}
+            <th scope="col">&nbsp;</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Marca</th>
+            <th scope="col">Calorias</th>
+            <th scope="col"></th>
 
-            {% if page_obj.has_next %}
-                {% if page_obj.next_page_number != paginator.num_pages %}
-                <li class="page-item"><a class="page-link" href="?{% param_replace page=page_obj.next_page_number %}">Siguiente</a></li>
-                {% endif %}
-                <li class="page-item">
-                <a class="page-link" href="?{% param_replace page=paginator.num_pages %}">Ultima</a></li>
-            {% endif %}
-                </ul>
-            </nav>
+          </tr>
+        </thead>
+        <tbody>
 
-            <p>Resultados {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>
-{% endif %}
--->
-{% if is_paginated %}
-  {% if page_obj.has_previous %}
-    <a href="?{% param_replace page=1 %}">Primera</a>
-    {% if page_obj.previous_page_number != 1 %}
-      <a href="?{% param_replace page=page_obj.previous_page_number %}">Anterior</a>
-    {% endif %}
-  {% endif %}
-
-  Pagina {{ page_obj.number }} de {{ paginator.num_pages }}
-
-  {% if page_obj.has_next %}
-    {% if page_obj.next_page_number != paginator.num_pages %}
-      <a href="?{% param_replace page=page_obj.next_page_number %}">Siguiente</a>
-    {% endif %}
-    <a href="?{% param_replace page=paginator.num_pages %}">Ultima</a>
-  {% endif %}
-
-  <p>Resultados {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>
-{% endif %}
-
-
-<!--
-{% if is_paginated %}
-    <nav aria-label="123">
-        <ul class="pagination pagination-sm">
-            {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Atras</a></li>
-            {% endif %}
-
-            {% for pagina in paginator.page_range  %}
-            {% if pagina == page_obj.number %}
-
-            <li class="page-item active"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
-
-            {% else %}
-            <li class="page-item"><a class="page-link" href="?page={{ pagina }}">{{ pagina }}</a></li>
-
-            {% endif %}
+          {% for i in alimentos  %}
+          <tr>
+            <th scope="row">
+              <input title='Marque para agregar' type="checkbox" class="checkbox-{{ forloop.counter }}" 
+              name="cb_alimento" id="cb_alimento-{{ forloop.counter }}" 
+              value="{{ i.id }}" /> 
+            </th>
+            <td class="tm-product-name">{{ i.nombre }}</td>
+            <td>{{ i.marca }}</td>
+            <td >{{ i.calorias }}</td>
             
-            {% endfor %}
+            <td>
 
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-{% endif %}
--->
+              <input title='Ingrese la cantidad en gramos' 
+              type="number"
+              placeholder="Cantidad" 
+              name="cantidad" 
+              id="cantidad" 
+              min="1" 
+              oninput="this.value = 
+             !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+           
+            </td>
 
-<button class="btn border-0" style="background-color: #70E000;" type="submit" >Agregar seleccionado</button>
+          </tr>
+          {% empty %}
+              No se han encontrado alimentos
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+      {% if is_paginated %}
+        {% if page_obj.has_previous %}
+        <a href="?{% param_replace page=1 %}">Primera</a>
+          {% if page_obj.previous_page_number != 1 %}
+            <a href="?{% param_replace page=page_obj.previous_page_number %}">Anterior</a>
+          {% endif %}
+        {% endif %}
+
+        Pagina {{ page_obj.number }} de {{ paginator.num_pages }}
+
+        {% if page_obj.has_next %}
+          {% if page_obj.next_page_number != paginator.num_pages %}
+            <a href="?{% param_replace page=page_obj.next_page_number %}">Siguiente</a>
+          {% endif %}
+          <a href="?{% param_replace page=paginator.num_pages %}">Ultima</a>
+        {% endif %}
+
+        <p>Resultados {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>
+      {% endif %}
+
+
+    <!-- table container -->
+    <button class="btn btn-primary  text-uppercase mt-2 mb-5"  type="submit" >Agregar seleccionado</button>
+  </div>
+</div>
+
+<!-- fin table prueba-->
 
 </form>
 

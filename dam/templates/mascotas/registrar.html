@@ -4,22 +4,29 @@
 
 {% block content %}
 
-
-    
-<br>
-    <div class="container-fluid">
-        <p class="h4">Registrar mascota<p>
-            <div class="row justify-content-start"> 
-                <div class="col-auto" style="width:35%">
-                    <form enctype='multipart/form-data' method="POST">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                    </form>
+    <form action="#" method="post" enctype='multipart/form-data'>
+        <div class="container tm-mt-big tm-mb-big">
+            <div class="row">
+            <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+                <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                <div class="row">
+                    <div class="col-12">
+                    <h2 class="tm-block-title d-inline-block">Agregar Alimento</h2>
+                    </div>
+                </div>
+                    <div id="agregarAlimento">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    </div>
+                    <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Agregar </button>
+                    </div>
+                </form>
+                </div>
                 </div>
             </div>
-    </div>
-<br>
-
+            </div>
+        </div>
+    </form>
 
 {% endblock content %}

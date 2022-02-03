@@ -296,7 +296,7 @@ class AgregarNotaView(LoginRequiredMixin,FormView):
 class PerfilMascotaView(LoginRequiredMixin,ListView):
     template_name ="mascotas/perfilmascota.html"
     filterset_class=NotaFilter
-    paginate_by=5
+    paginate_by=3
     context_object_name='notas'
     #ordering='-fecha'
 

@@ -1,16 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-
-
-{% block navbar_secundaria %}
-    {% if diario %}
-    {% include 'includes/navbarbarmascdiarios.html' %}
-    {% endif %}
-{% endblock navbar_secundaria %}
 {% load static %}
-
-
-
 
 {% block title %}Detalle diario{% endblock title %}
 
@@ -20,6 +10,7 @@
 {% language 'es' %}
 <div class="container-fluid">
   <div class="row justify-content-center"> 
+
     <form id="formAtras" method="GET"  >
       <button title="Día anterior" 
       type="submit" class="btn btn-success">&laquo;</button>
@@ -47,14 +38,9 @@
                   </form>
               </div>
           </div>
-      </div>
-
+        </div>
 
   </div>
-    
-
-
-
 </div>
 {% endlanguage %}
 
@@ -89,54 +75,68 @@
           </button>
       </div>
     {% endif %}
-
-
   {% endfor %}
 {% endif %}
 
 <br>
-<table class="table table-borderless">
-  <thead >
-    <tr class="table " style="background-color: #f7e4f7 " >
-      <th class="text-center" style="width:40%" >Comida</th>
-      <th class="text-center" style="width:30%">Calorias</th>
-      <th class="text-center" style="width:15%"> </th>
-      <th class="text-center" style="width:15%"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for i in comidas  %}
-    <tr class="table" style="background-color: #D8DFEE ">
-     
-      <td align="center" style="font-size:14px;">{{ i.alimento.marca }}, 
-      {{ i.alimento.nombre }}, {{ i.cantidad }}  gramos
-      </td>
-      
+<!--tabla prueba -->
+<div class="col-sm-12 col-md-12 col-lg-8 col-xl-12 tm-block-col">
+  <div class="tm-bg-primary-dark tm-block tm-block-products">
+    <div class="tm-product-table-container">
+      <table class="table table-hover tm-table-small tm-product-table">
+        <thead>
+          <tr>
+              
+            <th scope="col">&nbsp;</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Marca</th>
+            <th scope="col">Calorias</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            
+            
+          </tr>
+        </thead>
+        <tbody>
 
-      <td align="center" style="font-size:14px;">{{ i.total_cal }}</td>
-      
-      <td align="center" style="font-size:14px;">
-        <a title="Editar" href="{% url 'diario_urls:editalimento' i.id %}">
-        <img src="{% static 'iconos/modificar.svg' %}" width="18" height="18">
-        </a>
-      </td>
+          {% for i in comidas  %}
+          <tr>
+            <th scope="row"><!--<input type="checkbox" />--></th>
+            <td class="tm-product-name">{{ i.alimento.nombre }}</td>
+            <td>{{ i.alimento.marca }}</td>
+            <td >{{ i.total_cal }}</td>
+            
+            <td>
+              <a title="Editar" href="{% url 'diario_urls:editalimento' i.id %}">
+               <img src="{% static 'iconos/modificar.svg' %}" width="18" height="24" alt="icono-editar">
+              </a>
+            </td>
+            <td>
+              <a title="Borrar" href="{% url 'diario_urls:eliminaralimento' i.id %}">                 
+               <img src="{% static 'iconos/eliminar.svg' %}" width="18" height="24" alt="icono-eliminar">
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+              Todaviía no has cargado ningún alimento
+          {% endfor %}
 
-      <td align="center" style="font-size:14px;">
-        <a title="Borrar" href="{% url 'diario_urls:eliminaralimento' i.id %}">
-        <img src="{% static 'iconos/eliminar.svg' %}" width="18" height="18">
-        </a>
-      </td>
-
-    </tr>
-
-    {% endfor %}
-  </tbody>
-</table>
-<a class="btn btn-success" href="{% url 'alimentos_urls:listar-alimentos' diario.id %}">Agregar comida</a>
+        </tbody>
+      </table>
+    </div>
+    <!-- table container -->
+    <a 
+    href="{% url 'alimentos_urls:listar-alimentos' diario.id %}" class="btn btn-primary  text-uppercase mt-5">
+    Agregar nuevo alimento
+   </a>
+  </div>
+</div>
+<!--fin tabla prueba-->
 
 <div class="container-fluid">
     <div class="row justify-content-center"> 
       <div class="col-auto">
+
         <table class="table">
           <thead >
             <tr class="table table-borderless">
@@ -159,45 +159,40 @@
             </tr>
           </tbody>
         </table>
+
       </div>
   </div>
 </div>
 
 <br>
-<form method="post">
-<div class="container-fluid">
 
+
+<div class="container-fluid">
   <div class="row justify-content-center"> 
-    
     <div class="col-auto">
-      
+      <form method="post">
         {% csrf_token %}
         
         {% if diario.completado %}
           <button class="btn-sm btn-success mb-3" type="submit">Modificar diario</button>
           <input type="hidden" name="completar" id="completar" value="modificar">
         {% else %}
-          <div class="row justify-content-center">
-          
-          <!-- paso fecha y peso del día para llevar un registro -->
-          <label title="Actualización de peso opcional" for="peso">Peso mascota :&nbsp;</label>
-          <input title="Actualización de peso opcional" type="number" name="peso" id="peso" min="0" max="1000" value="0" step=".01" size="5" >
-          <!--<input type="hidden" name="fecha" id="fecha" value=" {{ diario.fecha }} ">-->
-          </div>
+            <div class="row justify-content-center">
+            
+              <!-- paso fecha y peso del día para llevar un registro -->
+              <label title="Actualización de peso opcional" for="peso">Peso mascota :&nbsp;</label>
+              <input title="Actualización de peso opcional" type="number" name="peso" id="peso" min="0" max="1000" value="0" step=".01" size="5" >
+              <!--<input type="hidden" name="fecha" id="fecha" value=" {{ diario.fecha }} ">-->
+            </div>
           <button class="btn-sm btn-success mb-3 mt-3 ml-3" type="submit">Completar diario</button>
           <input type="hidden" name="completar" id="completar" value="completar">
           <input type="hidden" name="difcal" id="difcal" value="1">
           
-          
         {% endif %}
-
-      
+      </form>
     </div>
   </div>
 </div>
-</form>
-
-
 
 {% block scripts %}
 <script type="text/javascript">

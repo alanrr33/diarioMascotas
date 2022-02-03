@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Eliminar mascota{% endblock title %}
 
-<!--
-{% block navbar_secundaria %}
-{% include 'includes/navbarmascotas.html' %}
-{% endblock navbar_secundaria %}-->
 
 {% block content %}
 
@@ -13,6 +9,11 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Eliminar</button>
     </form>
+
+    {% block footerclass %}
+    <footer class="tm-footer row -small fixed-bottom mt-auto" >
+    {% endblock %}
+
 {% endblock content %}
 
     

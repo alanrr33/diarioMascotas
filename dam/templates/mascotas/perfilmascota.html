@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load my_tags %}
 {% load static %}
-{% block title %}Perfil mascotas{% endblock title %}
+{% block title %}Perfil{% endblock title %}
 
 {% block content %}
 
@@ -53,92 +53,125 @@
   {% endfor %}
 {% endif %}
 
+<div class="container mt-5">
+   
+    <!-- row -->
+    <div class="row tm-content-row">
+        
+      <div class="tm-block-col tm-col-avatar">
+        <div class="tm-bg-primary-dark tm-block tm-block-avatar">
+          <h2 class="tm-block-title">Perfil </h2>
+          
+          
+          <div class="tm-avatar-container">
+            {% if mascota.imagen  %}
+            <img
+              src="{{mascota.imagen.url}}"
+              alt="Avatar"
+              class="tm-avatar img-fluid mb-4"
+            />
+            {% else %}
+            <img
+              src="https://bootdey.com/img/Content/avatar/avatar3.png"
+              alt="Avatar"
+              class="tm-avatar img-fluid mb-4"
+            />
+            {% endif %}
 
-
-
-
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/perfilmascota.css' %}">
-<div class="container bootstrap snippets bootdey">
-<div class="row">
-  <div class="profile-nav col-md-3">
-      <div class="panel">
-          <div class="user-heading round">
-              <a href="{{ mascota.imagen.url }}">
-                  <!--<img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">-->
-                  {% if mascota.imagen  %}
-                  <img src="{{ mascota.imagen.url }}" alt="123">
-                    {% else %}
-                  <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
-                  {% endif %}
-              </a>
-              <h1>{{ mascota.nombre }}</h1>
-              <p>{{ mascota.tipo }}</p>
           </div>
 
-            <ul class="nav flex-column mt-3">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page"
-                    href="{% url 'diario_urls:verdiario' mascota.id %}">Diario</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" 
-                    href="{% url 'mascotas_urls:panelmascota' mascota.id %}">Panel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" 
-                    href="{% url 'mascotas_urls:reportes' mascota.id %}">Reportes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" 
-                    href="{% url 'mascotas_urls:notas' mascota.id %}">Agregar nota</a>
-                </li>
-            </ul>
+          <a class="btn btn-primary btn-block text-uppercase" 
+          href="{% url 'diario_urls:verdiario' mascota.id %}">
+              Diario
+          </a>
 
+          <a class="btn btn-primary btn-block text-uppercase" 
+          href="{% url 'mascotas_urls:panelmascota' mascota.id %}">
+          Panel
+         </a>
+
+          <a class="btn btn-primary btn-block text-uppercase" 
+          href="{% url 'mascotas_urls:reportes' mascota.id %}">
+          Reportes
+         </a>
+
+          <a class="btn btn-primary btn-block text-uppercase" 
+          href="{% url 'mascotas_urls:notas' mascota.id %}">
+          Agregar nota
+         </a>
+          
+        </div>
       </div>
-  </div>
+      
+      <div class="tm-block-col tm-col-account-settings">
+        <div class="tm-bg-primary-dark tm-block tm-block-settings">
+          <h2 class="tm-block-title">Información</h2>
 
-  <div class="profile-info col-md-9">
-      <div class="panel">
-          <div class="bio-graph-heading">
-              Bienvenido al perfil de su mascota, aqui encontrara toda su información relevante.
-          </div>
-          <div class="panel-body bio-graph-info mt-4">
-              <h1>Biografía mascota</h1>
-              <div class="row">
-                  <div class="bio-row">
-                      <p><span>Nombre</span>: {{ mascota.nombre }}</p>
-                  </div>
-                  <div class="bio-row">
-                      <p><span>Tamaño </span>: {{ mascota.tamaño }}</p>
-                  </div>
-                  <div class="bio-row">
-                      <p><span>Raza </span>: Proximamente</p>
-                  </div>
-                  <div class="bio-row">
-                      <p><span>Edad</span>: {{ mascota.edad }} Meses</p>
-                  </div>
-                  <div class="bio-row">
-                      <p><span>Peso</span>: {{ mascota.peso }} Kilos</p>
-                  </div>
-                  <div class="bio-row">
-                      <p><span>Actividad </span>: {{ mascota.actividad }}</p>
-                  </div>
-                  <div class="bio-row">
-                      <p><span>Meta calorias </span>: {{ mascota.meta }}</p>
-                  </div>
-                  
-                  <div class="bio-row">
-                      <p><span>Objetivo </span>: {{ mascota.objetivo }}</p>
-                  </div>
-              </div>
-          </div>
+            <div class="form-group col-lg-6">
+              <label for="name">
+                  Nombre 
+                  {{ mascota.nombre }}
+              </label> 
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label for="name">
+                    Tamaño 
+                    {{ mascota.tamaño }}
+                </label> 
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label for="name">
+                    Edad 
+                    {{ mascota.edad }}
+                    Meses
+                </label> 
+            </div>
+            
+            <div class="form-group col-lg-6">
+                <label for="name">
+                    Peso 
+                    {{ mascota.peso }}
+                    Kg
+                </label> 
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label for="name">
+                    Actividad 
+                    {{ mascota.actividad }}
+                </label> 
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label for="name">
+                    Meta diaria 
+                    {{ mascota.meta }}
+                    Calorías
+                </label> 
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label for="name">
+                    Objetivo 
+                    {{ mascota.objetivo }}
+                </label> 
+            </div>
+   
+       
+        </div>
       </div>
-  <p class="h4 mb-3"><strong>Notas</strong></p>
+
+      <div class="tm-block-col tm-col-account-settings">
+        <div class="tm-bg-primary-dark tm-block tm-block-settings">
+
+             <p class="h4 mb-3"><strong>Notas</strong></p>
   <p class="h6">Ingrese la fecha de inicio y la fecha de fin</p>
   <form action="" method="get">
     {{ filterset.form.as_p }}
-    <button class="btn-sm border-0" style="background-color: #70E000;"  type="submit">Buscar</button>
+    
+    <button class="btn-sm btn-primary text-uppercase"   type="submit">Buscar</button>
   </form>
 
 
@@ -227,14 +260,19 @@
     No hay notas
 
     {% endif %}
+   
+       
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 
   </div>
 </div>
 
-  </div>
-</div>
-</div>
+
 
 
 {% endblock content %}
