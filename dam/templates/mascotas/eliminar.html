@@ -3,17 +3,11 @@
 
 
 {% block content %}
-
     <h1>¿Estas seguro de eliminar esta mascota ?</h1>
     <form method="POST">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Eliminar</button>
     </form>
-
-    {% block footerclass %}
-    <footer class="tm-footer row -small fixed-bottom mt-auto" >
-    {% endblock %}
-
 {% endblock content %}
 
     
