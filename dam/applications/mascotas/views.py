@@ -51,7 +51,7 @@ class MascotaRegisterView(LoginRequiredMixin,FormView):
         dueño=self.request.user
         nombre=form.cleaned_data['nombre']
         tipo=form.cleaned_data['tipo']
-        edad=form.cleaned_data['edad']
+        edad=int(form.cleaned_data['edad'])
         peso=form.cleaned_data['peso']
         actividad=form.cleaned_data['actividad']
         tamaño=form.cleaned_data['tamaño']

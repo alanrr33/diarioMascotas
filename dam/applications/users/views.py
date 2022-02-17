@@ -80,8 +80,9 @@ class LoginUser(FormView):
             #password=form.cleaned_data['password'],
         )
 
-        
-        login(self.request,user)
+
+        if user is not None:
+            login(self.request,user)
 
         return super(LoginUser, self).form_valid(form)
 

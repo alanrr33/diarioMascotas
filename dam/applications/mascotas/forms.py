@@ -156,10 +156,12 @@ class MascotaRegisterForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data=super(MascotaRegisterForm, self).clean() 
-        peso = self.cleaned_data.get('peso')    
-        edad = self.cleaned_data.get('edad')
+        peso = float(self.cleaned_data.get('peso'))
+        edad = int(self.cleaned_data.get('edad'))
+        
 
-            
+        print(type(peso))
+        print(type(edad))
         if peso<=0:
             self.add_error('peso','Por favor ponga un peso distinto o mayor a 0')
         if edad<=0:
@@ -207,10 +209,10 @@ class MascotaUpdateForm(forms.ModelForm):
         
         cleaned_data=super(MascotaUpdateForm, self).clean()
 
-        peso = self.cleaned_data.get('peso')    
-        edad = self.cleaned_data.get('edad')
+        peso = float(self.cleaned_data.get('peso'))
+        edad = int(self.cleaned_data.get('edad'))
 
-            
+        
         if peso<=0:
             self.add_error('peso','Por favor ponga un peso distinto o mayor a 0')
         if edad<=0:

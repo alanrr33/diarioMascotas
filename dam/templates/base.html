@@ -30,7 +30,7 @@
 </head>
 
 <!-- <body class="d-flex flex-column min-vh-100" style="background-color: #fafafa "> -->
-<body>
+  <body style="min-height: 100vh; display: flex; flex-direction: column;">
 <!-- nav bar -->
 {% block navbarprincipal %}
 {% include 'includes/navbarprincipal.html' %}
@@ -58,6 +58,8 @@
 
 {% block scripts %}
 {% endblock scripts %}
+
+<div style="flex-grow:1"></div>
 
 {% block footer %}
 <!-- Footer --> 
