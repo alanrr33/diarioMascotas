@@ -1,11 +1,4 @@
 {% extends 'base.html' %}
-{% block navbar_secundaria %}
-    {% if not diario %}
-    {% include 'includes/navbarmascotas.html' %}
-    {% else %}
-    {% include 'includes/navbarbarmascdiarios.html' %}
-    {% endif %}
-{% endblock navbar_secundaria %}
 {% load crispy_forms_tags %}
 
 {% block title %}Editar alimento{% endblock title %}

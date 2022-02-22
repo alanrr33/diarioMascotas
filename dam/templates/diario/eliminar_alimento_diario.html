@@ -1,14 +1,5 @@
 {% extends 'base.html' %}
 {% block title %}Eliminar alimento{% endblock title %}
-
-{% block navbar_secundaria %}
-    {% if not diario %}
-    {% include 'includes/navbarmascotas.html' %}
-    {% else %}
-    {% include 'includes/navbarbarmascdiarios.html' %}
-    {% endif %}
-{% endblock navbar_secundaria %}
-
 {% block content %}
 
 <div class="container tm-mt-big tm-mb-big">

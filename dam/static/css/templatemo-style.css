@@ -464,7 +464,7 @@ input[type="checkbox"]:focus {
 .tm-product-delete-link:hover .tm-product-delete-icon {
   color: #6d8ca6;
 }
-.custom-select {
+select {
   width: 100%;
   border: none;
   color: #acc6de;
@@ -482,7 +482,7 @@ input[type="checkbox"]:focus {
   padding: 15px;
   background: url(../img/arrow-down.png) 98% no-repeat #50657b;
 }
-.custom-select:focus {
+select:focus {
   outline: 0;
 }
 .tm-trash-icon {
@@ -500,7 +500,7 @@ input[type="checkbox"]:focus {
   -moz-box-shadow: 0 -3px 5px 0 rgba(69, 92, 113, 0.59);
   box-shadow: 0 -3px 5px 0 rgba(69, 92, 113, 0.59);
 }
-.custom-select {
+select {
   height: 50px;
   border-radius: 0;
 }
@@ -677,7 +677,7 @@ input[type="checkbox"]:focus {
   .page-item {
     margin-top: 10px;
   }
-  .custom-select {
+  select {
     background-position: 96%;
   }
 }
