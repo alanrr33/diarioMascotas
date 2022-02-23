@@ -39,33 +39,24 @@ class Mascota(models.Model):
     class Meta:
         ordering=['id']
 
-
-
-    #configuración basica
     dueño=models.ForeignKey(User,on_delete=models.CASCADE)
     nombre=models.CharField(max_length=30,blank=False)
     tipo=models.CharField(max_length=5,choices=TIPO_CHOICES,blank=False)
     peso=models.DecimalField(max_digits=4,decimal_places=2,help_text="Peso en Kg")
-    #edad en meses
     edad=models.PositiveIntegerField(default=12,help_text="Edad en meses")
     actividad=models.CharField(max_length=10,choices=ACTIVIDAD_CHOICES,default="Poca",blank=False)
-    #meta calorias
     meta=models.PositiveIntegerField('Meta calorias',null=True)
     tamaño=models.CharField(max_length=15,choices=TAMAÑO_CHOICES,blank=False,default="Mediano")
     esterilizado=models.BooleanField(default=False,help_text="Tildado = Si")
     objetivo=models.CharField(max_length=15,choices=OBJETIVO_CHOICES, default="Mantener peso")
     imagen=models.ImageField('Imagen',upload_to='Imgmascotas/',blank=True)
 
-  
 
     #le indicamos que el nuevo manager va a ser el que importamos localmente
     objects=MascotaManager()
 
     def __str__(self):
         return str(self.id)+' '+self.nombre
-
-    def imprimir(self):
-        print ('jajajajsdxd')
 
 class PesoMascotaDiario(models.Model):
 
@@ -100,50 +91,35 @@ class Nota(models.Model):
 
     def __str__(self):
         return str(self.id)+' '+self.mascota.nombre
-    
-
-    
-
+     
 
 def calc_meta(sender,instance,**kwargs):
-
+    #objetivo default mant peso,
+    #despues ajustar val necesarios
+    #acorde objetivo alcanzar
     if instance.tipo=="Gato":
-        print("soy gato")
-        print('peso '+str(instance.peso)) 
-
-        #objetivo default mant peso,
-        #despues ajustar val necesarios
-        #acorde objetivo alcanzar
-
         if instance.edad>=12:
-            print('soy gato adulto')
             if instance.esterilizado==True:
                 mult=1.2
                 if instance.actividad=="Normal" or instance.actividad =="Moderada":
                     mult+=0
                 if instance.actividad=="Poca":
-                    print('poca actividad')
                     mult-=0.2 
 
             if instance.esterilizado==False:
                 mult=1.4
-                print('no estoy esterilizado')
                 if instance.actividad=="Normal" or instance.actividad =="Moderada":
                     mult+=0
                 if instance.actividad=="Poca":
-                    print('poca actividad')
                     mult-=0.4   
 
         if instance.edad<12:
-            print('soy cachorro')
             if 0 <= instance.edad < 4:
-                print('entre 0 y 4')
                 mult=2.5
             if 4 <= instance.edad <12:
-                print('entre 4 y 12')
                 mult=2
-        #hasta aca todo joya
 
+        #updateamos las calorías de la mascota
         ner=70*(pow(Decimal(instance.peso), Decimal(0.75)))
         mer=round(ner*Decimal(mult) , 2)
         print(mult)
@@ -153,14 +129,9 @@ def calc_meta(sender,instance,**kwargs):
 
 
     if instance.tipo=="Perro":
-        print("soy perro")
-        print('peso '+str(instance.peso))
-        
         if instance.edad>=12:
-            print('soy perro adulto')
             if instance.esterilizado==True:
                 mult=1.6
-                print('estoy esterilizado')
                 if instance.actividad=="Poca":
                     mult+=0
                 if instance.actividad=="Normal":
@@ -171,9 +142,7 @@ def calc_meta(sender,instance,**kwargs):
                     mult+=4.4
 
             if instance.esterilizado==False:
-                print('no estoy esterilizado')
-                mult=1.8
-                print('estoy esterilizado')
+                mult=1.8 
                 if instance.actividad=="Poca":
                     mult+=0
                 if instance.actividad=="Normal":
@@ -184,14 +153,12 @@ def calc_meta(sender,instance,**kwargs):
                     mult+=4.2
 
         if instance.edad<12:
-            print('soy cachorro')
             if 0 <= instance.edad < 4:
-                print('entre 0 y 4')
                 mult=3
             if 4 <= instance.edad <12:
-                print('entre 4 y 12')
                 mult=2
-        #hasta aca todo joya
+
+        #updateamos las calorías de la mascota 
 
         ner=70*(pow(Decimal(instance.peso), Decimal(0.75)))
         mer=round(ner*Decimal(mult) , 0)
@@ -200,4 +167,5 @@ def calc_meta(sender,instance,**kwargs):
         print(mer)
         Mascota.objects.filter(id=instance.id).update(meta=mer)
 
+#trigger en la bd para actualizar los requerimientos caloricos cada vez que se modifican datos de la mascota
 post_save.connect(calc_meta,sender=Mascota)
