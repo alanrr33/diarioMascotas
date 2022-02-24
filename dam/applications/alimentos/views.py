@@ -143,7 +143,7 @@ class ListaAlimentos(LoginRequiredMixin,ListView):
 class AgregarAlimento(LoginRequiredMixin,CreateView):
     template_name="alimentos/agregar_alimento.html"
     model=Alimento
-    fields=['nombre','marca','descripcion','calorias']
+    fields=['nombre','marca','descripcion','calorias','tipo_mascota']
     success_url=reverse_lazy('alimentos_urls:listaalimentos')
 
     def form_valid(self, form):

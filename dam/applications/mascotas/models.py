@@ -96,7 +96,7 @@ class Nota(models.Model):
 def calc_meta(sender,instance,**kwargs):
     #objetivo default mant peso,
     #despues ajustar val necesarios
-    #acorde objetivo alcanzar
+    #acorde al objetivo a alcanzar
     if instance.tipo=="Gato":
         if instance.edad>=12:
             if instance.esterilizado==True:
